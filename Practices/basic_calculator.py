@@ -13,7 +13,7 @@ while True:
         addition = input_one + input_two
         subtraction = input_one - input_two
         multiplication = input_one * input_two
-        division = input_one/input_two
+        division = round(input_one/input_two, 2)
         exponents = input_one**input_two
         int_division = input_one//input_two
         modulo = input_one%input_two
