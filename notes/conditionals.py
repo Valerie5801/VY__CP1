@@ -28,8 +28,13 @@ elif roll <= 10: #checking if the player's luck is bad
         print(f"you took {damage} damage so now you have {player_hp} hp")
     else:
         print("sad you missed")
-        
+
 else: #fail-safe incase the player is so stupid they get a different value or if the player is so smart they get a different value
     print("what the heck did you get")
 
 print("turn is over")
+
+if True:
+    print("hi you're normal")
+else:
+    print("how did we get here")
