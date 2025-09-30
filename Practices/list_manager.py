@@ -15,12 +15,15 @@ while True:
         shop_list.append(task)
         print(f'"{task}" has been successfully added to your list.')
     elif action.strip().lower() == "remove":
-        task = input("Enter the task you would like to remove: ")
-        if task in shop_list:
-            shop_list.remove(task)
-            print(f'"{task}" has been successfully removed from your list.')
+        if shop_list:
+            task = input("Enter the task you would like to remove: ")
+            if task in shop_list:
+                shop_list.remove(task)
+                print(f'"{task}" has been successfully removed from your list.')
+            else:
+                print("Task is not found in list.")
         else:
-            print("Task is not found in list.")
+            print("No existing items in list.")
     elif action.strip().lower() == "exit":
         print("Goodbye.")
         break
