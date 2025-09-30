@@ -4,7 +4,6 @@ shop_list = []
 
 while True:
     action = input("What would you like to do with your list?(view, add, remove, exit): ")
-    #Write your code here
     if action.strip().lower() == "view":
         if shop_list:
             print(f"Here is your current list: {shop_list}")
