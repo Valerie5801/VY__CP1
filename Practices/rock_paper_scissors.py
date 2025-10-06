@@ -14,9 +14,27 @@ while True:
         print(f"You chose: {player_choice}")
         print(f"Computer chose: {comp_choice}")
         if comp_choice == "rock":
-            if player_choice == "rock":
+            if player_choice.strip().lower() == "rock":
                 print("It's a tie.")
-            if player_choice == "p":
-                print()
+            elif player_choice.strip().lower() == "paper":
+                print("You win!")
+            elif player_choice.strip().lower() == "scissors":
+                print("You lost.")
+                
+        elif comp_choice == "paper":
+            if player_choice.strip().lower() == "rock":
+                print("You lost.")
+            elif player_choice.strip().lower() == "paper":
+                print("It's a tie.")
+            elif player_choice.strip().lower() == "scissors":
+                print("You win!")
+
+        elif comp_choice == "scissors":
+            if player_choice.strip().lower() == "rock":
+                print("You win!")
+            elif player_choice.strip().lower() == "paper":
+                print("You lost.")
+            elif player_choice.strip().lower() == "scissors":
+                print("It's a tie.")
     else:
-        print("what do you want")
+        print("That isn't a valid option")
