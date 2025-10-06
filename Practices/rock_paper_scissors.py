@@ -9,32 +9,47 @@ while True:
         break
     elif play == "y":
         print("Let's begin.")
-        player_choice = input("Choose rock, paper, or scissors: ")
-        comp_choice = options[random.randint(0, 2)]
-        print(f"You chose: {player_choice}")
-        print(f"Computer chose: {comp_choice}")
-        if comp_choice == "rock":
-            if player_choice.strip().lower() == "rock":
-                print("It's a tie.")
-            elif player_choice.strip().lower() == "paper":
-                print("You win!")
-            elif player_choice.strip().lower() == "scissors":
-                print("You lost.")
-                
-        elif comp_choice == "paper":
-            if player_choice.strip().lower() == "rock":
-                print("You lost.")
-            elif player_choice.strip().lower() == "paper":
-                print("It's a tie.")
-            elif player_choice.strip().lower() == "scissors":
-                print("You win!")
+        while True:
+            player_choice = input("Choose rock, paper, or scissors: ")
+            if player_choice != "rock" and player_choice != "paper" and player_choice != "scissors":
+                print("That is not a valid option. Try again.")
+                continue
+            else:
+                comp_choice = options[random.randint(0, 2)]
+                print(f"You chose: {player_choice}")
+                print(f"Computer chose: {comp_choice}")
+                if comp_choice == "rock":
+                    if player_choice.strip().lower() == "rock":
+                        print("It's a tie.")
+                    elif player_choice.strip().lower() == "paper":
+                        print("You win!")
+                    elif player_choice.strip().lower() == "scissors":
+                        print("You lost.")
+                        
+                elif comp_choice == "paper":
+                    if player_choice.strip().lower() == "rock":
+                        print("You lost.")
+                    elif player_choice.strip().lower() == "paper":
+                        print("It's a tie.")
+                    elif player_choice.strip().lower() == "scissors":
+                        print("You win!")
 
-        elif comp_choice == "scissors":
-            if player_choice.strip().lower() == "rock":
-                print("You win!")
-            elif player_choice.strip().lower() == "paper":
-                print("You lost.")
-            elif player_choice.strip().lower() == "scissors":
-                print("It's a tie.")
+                elif comp_choice == "scissors":
+                    if player_choice.strip().lower() == "rock":
+                        print("You win!")
+                    elif player_choice.strip().lower() == "paper":
+                        print("You lost.")
+                    elif player_choice.strip().lower() == "scissors":
+                        print("It's a tie.")
+
+                play_again = input("Play again?(y/n): ")
+                if play_again == "y":
+                    continue
+                elif play_again == "n":
+                    print("Thank you for playing.")
+                    break
+
+        if play_again == "n":
+            break
     else:
-        print("That isn't a valid option")
+        print("That isn't a valid option.")
