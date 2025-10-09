@@ -1,0 +1,43 @@
+VY 2nd Tic Tac Toe Pseudocode
+Os will represent the player's marks, and Xs will represent the computer's marks.
+Import the random module
+
+Create a board using lists inside a list. Use integers (from 1 to 9) to represent the places where the Player and Computer can put their marks. Put this list in a variable called "board".
+
+The win condition will be if a row or column has all the same values, or if one of the two diagonals in the board has the same values.(Check if one of the lists inside board has the same values; if either the first, second, or third values of each list inside of board are the same; or if the center has the same value as two corners that are opposite of each other.)
+
+Game loop
+while True:
+    Show the board
+    while True:
+        Ask the player what spot they would like to take by having an input and asking them for a number 1 to 9.
+        If player_choice is not an integer:
+            Tell the player to input a valid choice.
+        Else:
+            If player_choice is not in board:
+                Tell the player to input a valid choice.
+            Else:
+                Replace that number with an O.
+
+        For the computer's choice, get a random number from 1-9.
+        If comp_choice is in board:
+            Find the value in board and replace it with an X
+        Else:
+            Get another random number from 1-9 until it gets a value that is in the list.
+        
+        Check if the board is full (has no integers).
+            If it has no integers:
+                Show "It is a tie."
+                Break out of the Loop.
+            Else If:
+                Check if either the player or the computer won by referring to the rules defined at the top.
+                If the player wins (check for Os):
+                    Show "You win!"
+                    Break out of the loop.
+                Else If the computer wins (check for Xs):
+                    Show "Computer wins!"
+                    Break out of the loop.
+                Else:
+                    Continue into the next loop.
+    Show the final board.
+    Break out of the loop.
