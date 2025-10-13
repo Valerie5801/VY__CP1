@@ -1,8 +1,8 @@
 #VY 2nd Password Strength
 
+print("I can check the strength of your password based on a scale of 1-5 using this criteria: \n-Password contains at least 8 characters \n-Password contains at least one uppercase letter \n-Password contains at least one lowercase letter \n-Password contains at least one number \n-Password contains at least one special character")
 #1. Create a while True loop (in case if the user would like to check multiple passwords)
 while True:
-    print("I can check the strength of your password based on a scale of 1-5 using this criteria: \n-Password contains at least least 8 characters \n-Password contains at least one uppercase letter \n-Password contains at least one lowercase letter \n-Password contains at least one number \n-Password contains at least one special character")
     #2. Create a variable called "strength_score" and set it to 0. This will be the variable that keeps track of how strong the user's passwords are.
     strength_score = 0
     #3. Create five variables, each currently set to False. Each variable will keep track of one of five conditions: Length, if the password has uppercase letters, if the password has loewrcase letters, if the password has numbers, and if the password has special characters.
@@ -12,9 +12,9 @@ while True:
     num_pass = False
     special_pass = False
     #4. Make a list of characters that are considered "special characters"
-    special_chars = ["!", "@", "#", "$", "%", "^", "&", "*", "_", "-", "+", "="]
+    special_chars = ["!", "@", "#", "$", "%", "^", "&", "*", "_", "-", "+", "=", "<", ">", "~", "`", ".", ",", "?", "/", ";", ":", "(", ")", "[", "]", "{", "}"]
     #5. Get a string input from the user asking for a password they would like to check.
-    user_pass = input("Give me a password for me to check: ")
+    user_pass = input("\nGive me a password for me to check: ")
     #6. Make a for loop that loops through the string. 
     for char in user_pass:
         #7. Inside said for loop, check what data type is the character. 
@@ -50,8 +50,35 @@ while True:
         #If strength_score is 3, show "Password strength: Moderate."
         #If strength_score is 4, show "Password strength: Strong."
         #If strength_score is 5, show "Password strength: Very Strong."
-    #Bonus: Check if the password is deemed weak. If so, check in what areas is it lacking in (what variables are still False), and print out suggestions based on it to make the password stronger.
-        #Example: If the password does not have special characters, print out, "Try adding a special character."
+    print(f"Your password's strength score: {strength_score}/5")
+    if strength_score <= 2:
+        print("Password strength: Weak.\n")
+    elif strength_score == 3:
+        print("Password strength: Moderate.\n")
+    elif strength_score == 4:
+        print("Password strength: Strong.\n")
+    elif strength_score == 5:
+        print("Password Strength: Very Strong.\n")
+
+    #Bonus: Check in what areas is it lacking in if it has any (what variables are still False), and print out suggestions based on it to make the password stronger.
+            #Example: If the password does not have special characters, print out, "Try adding a special character."
+    if not upper_pass:
+        print("You need at least one uppercase letter in your password.")
+    if not lower_pass:
+        print("You need at least one lowercase letter in your password.")
+    if not num_pass:
+        print("You need at least one number in your password.")
+    if not special_pass:
+        print(f"You need at least one special character in your password. Here are some suggestions:")
+        print(*special_chars)
+    if not length_pass:
+        print("You need at least eight characters in your password.")
     #11.A Ask the user if they want to check another password.
         #If the user says they want to exit, show "Goodbye", and break out of the loop.
         #If the user says they want to check another password, run another loop.
+    check_again = input("Would you like to check another password?(y/n): ")
+    if check_again == "y":
+        continue
+    elif check_again == "n":
+        print("Goodbye.")
+        break
