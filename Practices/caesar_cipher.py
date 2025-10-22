@@ -4,7 +4,7 @@
 def encode():
     message = input("Type a message you want to encode: ")
     while True:
-        shift_value = input("Give a shift value: ") #fail-safe incase user types in a non-integer shifting value
+        shift_value = input("Give a shift value(as a number): ") #fail-safe incase user types in a non-integer shifting value
         if not shift_value.isdigit():
             print("Invalid input. Try again.")
         else:
@@ -19,9 +19,11 @@ def encode():
         else:
             ascii_num = ord(char) + shift_value
             if ascii_num > 122 and char.islower(): #make it so that it wraps around the alphabet if we go past Z or z.
-                ascii_num = 97
+                ascii_num -= 122
+                ascii_num += 96
             elif ascii_num > 90 and char.isupper():
-                ascii_num = 65
+                ascii_num -= 90
+                ascii_num += 64
         final_char = chr(ascii_num)
         new_message += final_char
     return new_message
@@ -29,8 +31,8 @@ def encode():
 def decode():
     message = input("Type a message you want to decode: ")
     while True:
-        shift_value = input("Give a shift value: ") #fail-safe incase user types in a non-integer shifting value
-        if not shift_value.isdigit():
+        shift_value = input("Give a shift value(as a number. Max 25): ") #fail-safe incase user types in a non-integer shifting value
+        if not shift_value.isdigit() or int(shift_value) > 25:
             print("Invalid input. Try again.")
         else:
             shift_value = int(shift_value)
@@ -44,9 +46,11 @@ def decode():
         else:
             ascii_num = ord(char) - shift_value #Since this is decoding, we must go backwards.
             if ascii_num < 97 and char.islower(): #make it so that it wraps around the alphabet if we go past A or a.
-                ascii_num = 122
+                ascii_num += 122
+                ascii_num -= 96
             elif ascii_num < 65 and char.isupper():
-                ascii_num = 90
+                ascii_num += 90
+                ascii_num -= 64
         final_char = chr(ascii_num)
         new_message += final_char
     return new_message
