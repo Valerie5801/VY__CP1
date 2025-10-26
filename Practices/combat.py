@@ -5,28 +5,25 @@ import time
 health_roll = random.randint(1, 20)
 defense_roll = random.randint(1, 15)
 attack_roll = random.randint(1, 10)
-damage_roll = random.randint(1, 12)
+
 fighters = { #change numbers idk what im doing, may have to change this into variables based on logic
     "Knight":{
         "option_num" : 1,
         "health" : 8 + health_roll,
         "defense" : 6 + defense_roll,
         "attack" : 5 + attack_roll,
-        "damage" : 4 + damage_roll
     },
     "Mage":{
         "option_num" : 2,
         "health" : 5 + health_roll,
         "defense" : 8 + defense_roll,
         "attack" : 10 + attack_roll,
-        "damage" : 6 + damage_roll
     },
     "Rogue":{
         "option_num" : 3,
         "health" : 4 + health_roll,
         "defense" : 5 + defense_roll,
         "attack" : 13 + attack_roll,
-        "damage" : 9 + damage_roll
     }
 }
 
@@ -35,19 +32,16 @@ enemies = {
         "health" : 40,
         "defense" : 8,
         "attack" : 12,
-        "damage" : 6
     },
     "Slime":{
         "health" : 20,
         "defense" : 5,
         "attack" : 8,
-        "damage" : 4
     },
     "Wolf":{
         "health" : 30,
         "defense" : 10,
         "attack" : 10,
-        "damage" : 5
     },
 }
 
@@ -56,7 +50,8 @@ def user_combat():
     print("1. Normal Attack \n2. Wild Attack(you take a little bit of damage) \n3. Heal(by 6 points) \n4. Guard(raise your defense by 3)")
     user_action = input("What would you like to do?: ")
     if user_action == "1":
-        print("You did a normal attack.")
+        if user_fighter == "1":
+            print("sigh.")
     elif user_action == "2":
         print("You did a wild attack.")
     elif user_action == "3":
