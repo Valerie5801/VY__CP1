@@ -25,30 +25,39 @@ fighters = { #change numbers idk what im doing, may have to change this into var
     }
 }
 
-rival_fighter = random.randint(1, 3)
-if rival_fighter == 1:
-    
-    print("Your rival is a Knight.")
-elif rival_fighter == 2:
-    print("Your rival is a Mage.")
-elif rival_fighter == 3:
-    print("Your rival is a Rogue.")
+enemies = {
+    "Ogre":{
+        "health" : 40,
+        "defense" : 8,
+        "attack" : 12,
+        "damage" : 6
+    },
+    "Goblin":{
+        "health" : 20,
+        "defense" : 5,
+        "attack" : 8,
+        "damage" : 4
+    },
+    "Troll":{
+        "health" : 30,
+        "defense" : 10,
+        "attack" : 10,
+        "damage" : 5
+    },
+}
 
 def user_combat():
     print("Action time!")
     print("1. Normal Attack \n2. Wild Attack(you take a little bit of damage) \n3. Heal(by 6 points) \n4. Guard(raise your defense by 3)")
     user_action = input("What would you like to do?: ")
-    if user_fighter == "1":
-        if user_action == "1":
-            print("user knight attacked")
-        elif user_action == "2":
-            print("user knight furiously attacked")
-        elif user_action == "3":
-            
-    elif user_fighter == "2":
-        print("user knight furiously attacked")
-    elif user_fighter == "3":
-        print("yum")
+    if user_action == "1":
+        print("You did a normal attack.")
+    elif user_action == "2":
+        print("You did a wild attack.")
+    elif user_action == "3":
+        print("You healed yourself.")
+    elif user_action == "4":
+        print("You guarded yourself for one turn.")
 
 print("Hello! This a combat training simulator.")
 name = input("First off, what is your name?: ")
@@ -63,5 +72,14 @@ elif user_fighter == "2":
 elif user_fighter == "3":
     print(f"You are a Rogue. \nYour stats are: \nHealth: {fighters["Rogue"]["health"]} \nDefense: {fighters["Rogue"]["defense"]} \nAttack: {fighters["Rogue"]["attack"]} \nDamage: {fighters["Rogue"]["damage"]}")
 
-print("\nYour rival seems ready to battle!")
+enemy_choice = random.choice(list(enemies.keys()))
+if enemy_choice == "Ogre":
+    enemy_fighter = enemies["Ogre"]
+elif enemy_choice == "Goblin":
+    enemy_fighter = enemies["Goblin"]
+elif enemy_choice == "Troll":
+    enemy_fighter = enemies["Troll"]
+
+print(f"A wild {enemy_choice} has appeared!")
+user_combat()
 
