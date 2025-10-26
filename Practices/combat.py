@@ -1,27 +1,32 @@
 #VY 2nd Combat Program
 import random
+import time
 
+health_roll = random.randint(1, 20)
+defense_roll = random.randint(1, 15)
+attack_roll = random.randint(1, 10)
+damage_roll = random.randint(1, 12)
 fighters = { #change numbers idk what im doing, may have to change this into variables based on logic
     "Knight":{
         "option_num" : 1,
-        "health" : 30,
-        "defense" : 14,
-        "attack" : 10,
-        "damage" : 7
+        "health" : 8 + health_roll,
+        "defense" : 6 + defense_roll,
+        "attack" : 5 + attack_roll,
+        "damage" : 4 + damage_roll
     },
     "Mage":{
         "option_num" : 2,
-        "health" : 25,
-        "defense" : 14,
-        "attack" : 15,
-        "damage" : 5
+        "health" : 5 + health_roll,
+        "defense" : 8 + defense_roll,
+        "attack" : 10 + attack_roll,
+        "damage" : 6 + damage_roll
     },
     "Rogue":{
         "option_num" : 3,
-        "health" : 15,
-        "defense" : 10,
-        "attack" : 30,
-        "damage" : 9
+        "health" : 4 + health_roll,
+        "defense" : 5 + defense_roll,
+        "attack" : 13 + attack_roll,
+        "damage" : 9 + damage_roll
     }
 }
 
@@ -32,13 +37,13 @@ enemies = {
         "attack" : 12,
         "damage" : 6
     },
-    "Goblin":{
+    "Slime":{
         "health" : 20,
         "defense" : 5,
         "attack" : 8,
         "damage" : 4
     },
-    "Troll":{
+    "Wolf":{
         "health" : 30,
         "defense" : 10,
         "attack" : 10,
@@ -75,11 +80,12 @@ elif user_fighter == "3":
 enemy_choice = random.choice(list(enemies.keys()))
 if enemy_choice == "Ogre":
     enemy_fighter = enemies["Ogre"]
-elif enemy_choice == "Goblin":
-    enemy_fighter = enemies["Goblin"]
-elif enemy_choice == "Troll":
-    enemy_fighter = enemies["Troll"]
+elif enemy_choice == "Slime":
+    enemy_fighter = enemies["Slime"]
+elif enemy_choice == "Wolf":
+    enemy_fighter = enemies["Wolf"]
 
-print(f"A wild {enemy_choice} has appeared!")
+time.sleep(1)
+print(f"\nA wild {enemy_choice} has appeared!")
 user_combat()
 
