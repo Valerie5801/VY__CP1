@@ -50,8 +50,9 @@ def user_combat():
     print("1. Normal Attack \n2. Wild Attack(you take a little bit of damage) \n3. Heal(by 6 points) \n4. Guard(raise your defense by 3)")
     user_action = input("What would you like to do?: ")
     if user_action == "1":
-        if user_fighter == "1":
-            print("sigh.")
+        damage = user_fighter["attack"] - enemy_fighter["defense"]
+        enemy_fighter["health"] -= damage
+        print(f"You did a normal attack. {enemy_choice} now has {enemy_fighter["health"]} health left.")
     elif user_action == "2":
         print("You did a wild attack.")
     elif user_action == "3":
@@ -66,11 +67,14 @@ user_fighter = input("Choose a class: ")
 print("Awesome! Now...\n")
 
 if user_fighter == "1":
-    print(f"You are a Knight. \nYour stats are: \nHealth: {fighters["Knight"]["health"]} \nDefense: {fighters["Knight"]["defense"]} \nAttack: {fighters["Knight"]["attack"]} \nDamage: {fighters["Knight"]["damage"]}")
+    user_fighter = fighters["Knight"]
+    print(f"You are a Knight. \nYour stats are: \nHealth: {fighters["Knight"]["health"]} \nDefense: {fighters["Knight"]["defense"]} \nAttack: {fighters["Knight"]["attack"]}")
 elif user_fighter == "2":
-    print(f"You are a Mage. \nYour stats are: \nHealth: {fighters["Mage"]["health"]} \nDefense: {fighters["Mage"]["defense"]} \nAttack: {fighters["Mage"]["attack"]} \nDamage: {fighters["Mage"]["damage"]}")
+    user_fighter = fighters["Mage"]
+    print(f"You are a Mage. \nYour stats are: \nHealth: {fighters["Mage"]["health"]} \nDefense: {fighters["Mage"]["defense"]} \nAttack: {fighters["Mage"]["attack"]}")
 elif user_fighter == "3":
-    print(f"You are a Rogue. \nYour stats are: \nHealth: {fighters["Rogue"]["health"]} \nDefense: {fighters["Rogue"]["defense"]} \nAttack: {fighters["Rogue"]["attack"]} \nDamage: {fighters["Rogue"]["damage"]}")
+    user_fighter = fighters["Rogue"]
+    print(f"You are a Rogue. \nYour stats are: \nHealth: {fighters["Rogue"]["health"]} \nDefense: {fighters["Rogue"]["defense"]} \nAttack: {fighters["Rogue"]["attack"]}")
 
 enemy_choice = random.choice(list(enemies.keys()))
 if enemy_choice == "Ogre":
