@@ -2,63 +2,84 @@
 import random
 import time
 
-health_roll = random.randint(1, 20)
-defense_roll = random.randint(1, 15)
-attack_roll = random.randint(1, 10)
-
-fighters = { #change numbers idk what im doing, may have to change this into variables based on logic
+fighters = {
     "Knight":{
         "option_num" : 1,
-        "health" : 8 + health_roll,
-        "defense" : 6 + defense_roll,
-        "attack" : 5 + attack_roll,
+        "health" : 30,
+        "defense" : 4,
+        "attack" : 5 ,
     },
     "Mage":{
         "option_num" : 2,
-        "health" : 5 + health_roll,
-        "defense" : 8 + defense_roll,
-        "attack" : 10 + attack_roll,
+        "health" : 25,
+        "defense" : 4,
+        "attack" : 4,
     },
     "Rogue":{
         "option_num" : 3,
-        "health" : 4 + health_roll,
-        "defense" : 5 + defense_roll,
-        "attack" : 13 + attack_roll,
+        "health" : 15,
+        "defense" : 3,
+        "attack" : 6,
     }
 }
 
 enemies = {
     "Ogre":{
-        "health" : 40,
-        "defense" : 8,
-        "attack" : 12,
+        "health" : 35,
+        "defense" : 3,
+        "attack" : 5,
     },
     "Slime":{
-        "health" : 20,
-        "defense" : 5,
-        "attack" : 8,
+        "health" : 15,
+        "defense" : 3,
+        "attack" : 3,
     },
     "Wolf":{
-        "health" : 30,
-        "defense" : 10,
-        "attack" : 10,
+        "health" : 25,
+        "defense" : 5,
+        "attack" : 4,
     },
 }
 
 def user_combat():
-    print("Action time!")
-    print("1. Normal Attack \n2. Wild Attack(you take a little bit of damage) \n3. Heal(by 6 points) \n4. Guard(raise your defense by 3)")
+    print("Your turn.")
+    print("1. Normal Attack \n2. Wild Attack(you take a little bit of damage) \n3. Heal(by 6 points) \n4. Skip.")
     user_action = input("What would you like to do?: ")
     if user_action == "1":
         damage = user_fighter["attack"] - enemy_fighter["defense"]
         enemy_fighter["health"] -= damage
-        print(f"You did a normal attack. {enemy_choice} now has {enemy_fighter["health"]} health left.")
+        if enemy_fighter["health"] < 0:
+            enemy_fighter["health"] == 0
+        print(f"You did a normal attack. {enemy_choice} now has {enemy_fighter["health"]} health.\n")
+        time.sleep(1.5)
     elif user_action == "2":
-        print("You did a wild attack.")
+        recoil = random.randint(2, 3)
+        enemy_fighter["health"] -= user_fighter["attack"]
+        user_fighter["health"] -= recoil
+        if user_fighter["health"] < 0:
+            user_fighter["health"] == 0
+        if enemy_fighter["health"] < 0:
+            enemy_fighter["health"] == 0
+        print(f"You did a wild attack. {enemy_choice} now has {enemy_fighter["health"]} health. \nHowever, you took {recoil} damage. You now have {user_fighter["health"]} health.\n")
+        time.sleep(1.5)
     elif user_action == "3":
-        print("You healed yourself.")
+        user_fighter["health"] += 6
+        print(f"You healed yourself by 6 points. You now have {user_fighter["health"]} points of health left.\n")
+        time.sleep(1.5)
     elif user_action == "4":
-        print("You guarded yourself for one turn.")
+        print("You skipped your turn.\n")
+        time.sleep(1.5)
+    return user_fighter, enemy_fighter
+
+def enemy_combat():
+    print(f"{enemy_choice}'s turn.")
+    damage = enemy_fighter["attack"] - user_fighter["defense"]
+    user_fighter["health"] -= damage
+    if user_fighter["health"] < 0:
+        user_fighter["health"] == 0
+    print(f"{enemy_choice} attacks you. \nYou now have {user_fighter["health"]} health.\n")
+    time.sleep(1.5)
+    return user_fighter
 
 print("Hello! This a combat training simulator.")
 name = input("First off, what is your name?: ")
@@ -84,7 +105,39 @@ elif enemy_choice == "Slime":
 elif enemy_choice == "Wolf":
     enemy_fighter = enemies["Wolf"]
 
-time.sleep(1)
+time.sleep(1.5)
 print(f"\nA wild {enemy_choice} has appeared!")
-user_combat()
 
+first = random.randint(1, 2)
+if first == 1:
+    print("You get to go first.")
+    user_combat()
+    turn = "enemy"
+elif first == 2:
+    print(f"{enemy_choice} is going first.")
+    enemy_combat()
+    turn = "player"
+
+while True:
+    if turn == "enemy":
+        enemy_combat()
+        turn = "player"
+        if user_fighter["health"] == 0:
+            print("You lost.")
+            break
+        elif enemy_fighter["health"] == 0:
+            print("You won!")
+            break
+        else:
+            continue
+    elif turn == "player":
+        user_combat()
+        turn = "enemy"
+        if user_fighter["health"] == 0:
+            print("You lost.")
+            break
+        elif enemy_fighter["health"] == 0:
+            print("You won!")
+            break
+        else:
+            continue
