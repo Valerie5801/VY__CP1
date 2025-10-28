@@ -6,19 +6,19 @@ fighters = {
     "Knight":{
         "health" : 30,
         "defense" : 4,
-        "attack" : 5,
+        "attack" : 6,
         "guard" : False
     },
     "Mage":{
         "health" : 25,
-        "defense" : 4,
-        "attack" : 4,
+        "defense" : 3,
+        "attack" : 5,
         "guard" : False
     },
     "Rogue":{
-        "health" : 20,
-        "defense" : 3,
-        "attack" : 6,
+        "health" : 15,
+        "defense" : 2,
+        "attack" : 7,
         "guard" : False
     }
 }
@@ -30,13 +30,13 @@ enemies = {
         "attack" : 5,
     },
     "Slime":{
-        "health" : 15,
-        "defense" : 3,
-        "attack" : 5,
+        "health" : 20,
+        "defense" : 2,
+        "attack" : 4,
     },
     "Wolf":{
         "health" : 25,
-        "defense" : 4,
+        "defense" : 3,
         "attack" : 5,
     },
 }
@@ -56,7 +56,7 @@ def user_combat():
         time.sleep(1.5)
     elif user_action == "2":
         recoil = random.randint(2, 3)
-        damage = max(0, (user_fighter["attack"] * 1.5) - enemy_fighter["defense"])
+        damage = max(0, (user_fighter["attack"] * 2) - enemy_fighter["defense"])
         user_fighter["health"] -= recoil
         if damage < 0:
             damage = 0
