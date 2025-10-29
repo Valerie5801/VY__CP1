@@ -2,33 +2,72 @@
 import random #import libraries
 import turtle
 
-#create turtle 1
-    #set position for this turtle and all other turtles
+race_end = False #create a flag to signal when the program ends
+#make the finish line on the right side at the start of the program.
+finish = turtle.Turtle()
+finish.hideturtle()
+finish.color("black")
+finish.pensize(10)
+finish.penup()
+finish.goto(x=400, y=-500)
+finish.pendown()
+finish.sety(500)
+finish.isvisible()
+
+#make a function that gives a different speed to each turtle
+def speed():
+    for competitor in competitors:
+        competitor.forward(random.randint(1, 10))
+
+#create all five turtles
 red = turtle.Turtle()
-red.color("red")
-red.shape("turtle")
-red.teleport(x=-100, y=250, fill_gap=False)
-
-#create turtle 2
 blue = turtle.Turtle()
-blue.color("blue")
-blue.shape("turtle")
-
-#create turtle 3
 yellow = turtle.Turtle()
-yellow.color("yellow")
-yellow.shape("turtle")
-
-#create turtle 4
 green = turtle.Turtle()
-green.color("green")
-green.shape("turtle")
-
-#create turtle 5
 purple = turtle.Turtle()
-purple.color("purple")
-purple.shape("turtle")
+competitors = [red, blue, yellow, green, purple]
 
-#Make each turtle have different speeds
-#Make a finish line on the right side of the screen
+#make a for loop to put general settings for each turtle
+for competitor in competitors:
+    competitor.hideturtle()
+    competitor.shape("turtle")
+    competitor.pensize(5)
+    competitor.turtlesize(stretch_wid=3, stretch_len=3, outline=2)
+    competitor.showturtle()
+
+#setup turtle 1 (make it unique)
+red.color("red")
+red.penup()
+red.goto(x=-490, y=430)
+red.pendown()
+
+#setup turtle 2
+blue.color("blue")
+blue.penup()
+blue.goto(x=-490, y=230)
+blue.pendown()
+
+#setup turtle 3
+yellow.color("yellow")
+yellow.penup()
+yellow.goto(x=-490, y=30)
+yellow.pendown()
+
+#setup turtle 4
+green.color("green")
+green.penup()
+green.goto(x=-490, y=-200)
+green.pendown()
+
+#setup turtle 5
+purple.color("purple")
+purple.penup()
+purple.goto(x=-490, y=-400)
+purple.pendown()
+
+
+
+#make an if statement to check what turtle won
+
+
 turtle.done()
