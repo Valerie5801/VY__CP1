@@ -3,7 +3,7 @@ import random #import libraries
 import turtle
 
 race_end = False #create a flag to signal if a turtle won or not
-#make the finish line on the right side at the start of the program.
+#make a function for the finish line
 finish = turtle.Turtle()
 def create_race():
     finish.hideturtle()
