@@ -2,7 +2,6 @@
 import random #import libraries
 import turtle
 
-race_end = False #create a flag to signal if a turtle won or not
 #make a function for the finish line
 finish = turtle.Turtle()
 def create_race():
@@ -75,7 +74,7 @@ purple.pendown()
 create_race()
 
 #make a while loop for the race itself
-while not race_end:
+while True:
     movement()
     #make an if statement to check what turtle won
     if red.xcor() >= finish.xcor():
