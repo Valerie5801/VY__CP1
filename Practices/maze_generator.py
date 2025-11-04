@@ -4,56 +4,73 @@ import random
 
 #make two lists inside of a list; one for the rows and one for the columns. use random.randint to for 0 or 1 (no wall or wall.)
 rows = [
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)]
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)]
 ]
 
 columns = [
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)],
-    [random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2), random.randint(0, 2)]
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)],
+    [random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1), random.randint(0, 1)]
 ]
 
 #create a function for the maze generation.
 def maze_gen():
-    count_col = 0
-    count_row = 0
+    turtle.speed(0.5)
     turtle.penup()
-    turtle.goto(x=-250, y=-250)
-    for row in rows:
-        for spot in row:
-            if spot > 0:
-                turtle.forward(25)
-                turtle.penup()
-            else:
-                turtle.penup()
-                turtle.forward(25)
-        count_row += 1
-        turtle.goto(y=-250+(count_row*25))
-        turtle.pendown()
-    turtle.goto(x=-250, y=0)
+    turtle.goto(x=-300, y=-250)
+    count_row = 0 #counter for how many rows the turtle has completed
+    count_col = 0 #counter for how many columns the turtle has completed
+    for i in range(2):
+        for row in rows:
+            for spot in row:
+                if spot == 0: #don't draw if that spot is a 0
+                    turtle.penup()
+                    turtle.forward(50)
+                elif spot == 1: #don't draw if that spot is a 1
+                    turtle.pendown()
+                    turtle.forward(50)
+                    turtle.penup()
+            count_row += 1
+            turtle.goto(x=-300, y=-250+(count_row*25))
+    turtle.penup()
+    turtle.goto(x=-300, y=0)
     turtle.right(90)
-    for column in columns:
-        for spot in column:
-            if spot > 0:
-                turtle.forward(25)
-                turtle.penup()
-            else:
-                turtle.penup()
-                turtle.forward(25)
-        count_col += 1
-        turtle.goto(x=-250+(count_col*25))
+    for i in range(2):
+        for column in columns:
+            for spot in column:
+                if spot == 0:
+                    turtle.penup()
+                    turtle.forward(50)
+                elif spot == 1:
+                    turtle.pendown()
+                    turtle.forward(50)
+                    turtle.penup()
+            count_col += 1
+            turtle.goto(x=-300+(count_col*25), y=0)
+
+
+turtle.screensize(canvwidth=50, canvheight=50)
+turtle.penup()
+turtle.goto(x=-300, y=-300)
+turtle.pendown()
+for i in range(4):
+    turtle.forward(25)
+    if turtle.ycor() == -300 or turtle.ycor() == 0:
+        turtle.penup()
+        turtle.forward(25)
         turtle.pendown()
-
-
-turtle.screensize(canvwidth=500, canvheight=500)
+        turtle.forward(250)
+    else:
+        turtle.forward(275)
+    turtle.right(-90)
 maze_gen()
 turtle.done()
 #def is_solvable(row_grid, col_grid):
