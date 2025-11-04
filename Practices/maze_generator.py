@@ -36,7 +36,7 @@ def maze_gen():
                 turtle.penup()
                 turtle.forward(25)
         count_row += 1
-        turtle.goto(x=-250, y=-250+(count_row*25))
+        turtle.goto(y=-250+(count_row*25))
         turtle.pendown()
     turtle.goto(x=-250, y=0)
     turtle.right(90)
@@ -49,7 +49,7 @@ def maze_gen():
                 turtle.penup()
                 turtle.forward(25)
         count_col += 1
-        turtle.goto(x=-250+(count_col*25), y=-150)
+        turtle.goto(x=-250+(count_col*25))
         turtle.pendown()
 
 
