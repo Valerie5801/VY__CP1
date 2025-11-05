@@ -75,5 +75,32 @@ maze_gen()
 turtle.done()
 #def is_solvable(row_grid, col_grid):
  #   size = len(row_grid) - 1
+    #visited = set()
+    #stack = [(0, 0)]
+    
+    #while stack:
+        #x, y = stack.pop()
+
+        #if x == size - 1 and y == sizee - 2:
+            #return True
+        
+        #if (x, y) in visited:
+            #continue
+
+        #visited.add((x, y))
+
+        #if x < size - 1 and columns[y][x+1] == 0:
+            #stack.append((x+1, y))
+
+        #if y < size - 1 and rows[y][x+1] == 0:
+            #stack.append((x, y+1))
+        
+        #if x > 0 and columns[y][x] == 0:
+            #stack.append((x-1, y))
+        
+        #if y > 0 and rows[y][x] == 0:
+            #stack.append((x, y-1))
+
+    #return False
 
 #When having turtle draw the maze, make it do pendown, penup, at certain points to make the maze.
