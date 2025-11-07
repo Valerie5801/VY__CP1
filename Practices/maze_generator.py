@@ -2,58 +2,55 @@
 import turtle #import turtle here
 import random
 
-#make two lists inside of a list; one for the rows and one for the columns. make each list inside of the list empty so we can randomize them (for the walls) any time we want. These are like blank slates. This square will be a 12x12 because of the size of the square, and by doing a 6x6 and the nested for loop run twice will make the maze be repetitive.
-rows = [ #12 lists inside of each list because its a 12x12
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
-]
-
-
-columns = [
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
-]
-
 #make a function to put random values inside of the rows and columns lists
-def maze_gen(row_grid, col_grid):
-    for row in row_grid:
+def maze_gen():
+    #make two lists inside of a list; one for the rows and one for the columns. make each list inside of the list empty so we can randomize them (for the walls) any time we want. These are like blank slates. This square will be a 12x12 because of the size of the square, and by doing a 6x6 and the nested for loop run twice will make the maze be repetitive.
+    rows = [ #12 lists inside of each list because its a 12x12
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+]
+    columns = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+]
+    for row in rows:
         for i in range(12): #since this is a 12x12 square, this must run 12 times to fill all spots
             row.append(random.randint(0, 1))
-    for column in col_grid:
+    for column in columns:
         for i in range(12): #same thing here
             column.append(random.randint(0, 1))
-    return row_grid, col_grid
+    return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
 #create a function to check if the maze is solvable.
 def is_solvable(grid):
-    size = len(grid[0]) - 1
+    size = len(grid[0]) - 1 #grid[0] is getting the rows. 
     visited = set() #empty list for coordinates that have already been visited
     stack = [(0, 0)]
     
     while stack:
         x, y = stack.pop() #replace the 0, 0 in stack with x, y
 
-        if x == size - 1 and y == size - 2:
+        if x == size - 1 and y == size -1:
             return True
         
         if (x, y) in visited: #check if we've been here before
@@ -61,10 +58,12 @@ def is_solvable(grid):
 
         visited.add((x, y)) #add this spot to the "we've been here before" list
 
-        if x < size and grid[1][x+1][y] == 0: #check the spot to the right for a wall
+        if x < size and grid[1][x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
+            #if x +1 <= size:
             stack.append((x+1, y))
 
         if y < size - 1 and grid[0][x][y+1] == 0: #check the spot upwards for a wall
+            #if y+1 <= size:
             stack.append((x, y+1))
         
         if x > 0 and grid[1][x][y] == 0: #check the spot leftwards for a wall
@@ -84,6 +83,8 @@ def draw_maze(grid):
     count_col = 0 #counter for how many columns the turtle has completed
     for row in grid[0]: #make a nested loop for drawing rows
         for spot in row:
+            if count_row == 11: #stop before the 12th row (which is actually the top side). This prevents it from sealing off the exit
+                break
             if spot == 0: #don't draw if that spot is a 0
                 turtle.penup()
                 turtle.forward(25)
@@ -94,10 +95,12 @@ def draw_maze(grid):
         count_row += 1 #add one for each row the turtle completes
         turtle.goto(x=0, y=25+(count_row*25))
     turtle.penup()
-    turtle.goto(x=0, y=0) #go to the bottom left corner and face up to start drawing columns
+    turtle.goto(x=25, y=0) #go to the bottom left corner and face up to start drawing columns
     turtle.right(-90)
     for column in grid[1]: #make a nested for loop for drawing the columns.
         for spot in column:
+            if count_col == 11: #stop before the 12th column (which is actually the right side). This prevents it from the turtle from ending up outside of the maze
+                break
             if spot == 0: #don't draw if spot is 0
                 turtle.penup()
                 turtle.forward(25)
@@ -106,15 +109,16 @@ def draw_maze(grid):
                 turtle.forward(25)
                 turtle.penup()
         count_col += 1 #add one for each column the turtle completes
-        turtle.goto(x=0+(count_col*25), y=0)
+        turtle.goto(x=25+(count_col*25), y=0)
 
 
-def final_maze():
+def final_maze(): #this function will be ran every time the user wants a new maze.
     while True:
-        if is_solvable(maze_gen(rows, columns)):
-            draw_maze(maze_gen(rows, columns))
+        maze = maze_gen()
+        if is_solvable(maze): #is_solvable returns a boolean
+            draw_maze(maze)
             break
-        else:
+        elif not is_solvable(maze):
             continue
 
 turtle.screensize(canvwidth=50, canvheight=50) #create screensize
