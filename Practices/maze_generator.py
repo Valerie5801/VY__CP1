@@ -39,18 +39,30 @@ def maze_gen():
     for column in columns:
         for i in range(12): #same thing here
             column.append(random.randint(0, 1))
+    x, y = 0, 0
+    size = len(rows)
+    while x < size - 1 or y < size - 1: #make at least one guaranteed path
+        if x < size - 1:
+            columns[x+1][y] = 0
+            x += 1
+        if y < size - 1:
+            rows[x][y + 1] = 0
+            y += 1
+    rows[0][0] = 0 #make a guaranteed entrance and exit.
+    rows[-1][-1] = 0
     return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
 #create a function to check if the maze is solvable.
 def is_solvable(grid):
-    size = len(grid[0]) - 1 #grid[0] is getting the rows. 
+    row_grid, col_grid = grid #to improve readability, set rows to grid[0] and columns to grid[1]
+    size = len(row_grid) #a size of 12
     visited = set() #empty list for coordinates that have already been visited
     stack = [(0, 0)]
     
     while stack:
         x, y = stack.pop() #replace the 0, 0 in stack with x, y
 
-        if x == size - 2 and y == size - 2:
+        if x == size - 1 and y == size - 1:
             return True
         
         if (x, y) in visited: #check if we've been here before
@@ -58,16 +70,16 @@ def is_solvable(grid):
 
         visited.add((x, y)) #add this spot to the "we've been here before" list
 
-        if x < size and grid[1][x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
+        if x < size - 1 and col_grid[x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
             stack.append((x+1, y))
 
-        if y < size - 1 and grid[0][x][y+1] == 0: #check the spot upwards for a wall
+        if y < size - 1 and row_grid[x][y+1] == 0: #check the spot upwards for a wall
             stack.append((x, y+1))
         
-        if x > 0 and grid[1][x][y] == 0: #check the spot leftwards for a wall
+        if x > 0 and col_grid[x][y] == 0: #check the spot leftwards for a wall
             stack.append((x-1, y))
         
-        if y > 0 and grid[0][x][y] == 0: #check the spot downwards for a wall
+        if y > 0 and row_grid[x][y] == 0: #check the spot downwards for a wall
             stack.append((x, y-1))
 
     return False #return false if we have checked every index and there is no exit
