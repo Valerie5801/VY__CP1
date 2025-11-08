@@ -47,14 +47,20 @@ def maze_gen():
         if x < size - 1 and (y == size - 1 or random.choice([True, False])):
             columns[x][y] = 0
             x += 1
-        else:
+        elif y < size - 1:
             rows[x][y] = 0
             y += 1
     path_coords.add((11, 11))
     rows[0][0] = 0 #entrance
     columns[0][0] = 0
     rows[size-1][size-1] = 0
-    columns[size-1][size-1] #exit
+    columns[size-1][size-1] = 0 #exit
+
+    for i in range(size):
+        for j in range(size):
+            if (i, j) not in path_coords:
+                rows[i][j] = random.randint(0, 1)
+                columns[i][j] = random.randint(0, 1)
 
     return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
@@ -76,16 +82,16 @@ def is_solvable(grid):
 
         visited.add((x, y)) #add this spot to the "we've been here before" list
 
-        if x < size - 1 and col_grid[x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
+        if x < size - 1 and col_grid[x][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
             stack.append((x+1, y))
 
-        if y < size - 1 and row_grid[x][y+1] == 0: #check the spot upwards for a wall
+        if y < size - 1 and row_grid[x][y] == 0: #check the spot upwards for a wall
             stack.append((x, y+1))
         
-        if x > 0 and col_grid[x][y] == 0: #check the spot leftwards for a wall
+        if x > 0 and col_grid[x-1][y] == 0: #check the spot leftwards for a wall
             stack.append((x-1, y))
         
-        if y > 0 and row_grid[x][y] == 0: #check the spot downwards for a wall
+        if y > 0 and row_grid[x][y-1] == 0: #check the spot downwards for a wall
             stack.append((x, y-1))
 
     return False #return false if we have checked every index and there is no exit
