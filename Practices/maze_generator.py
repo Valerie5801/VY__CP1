@@ -50,7 +50,7 @@ def is_solvable(grid):
     while stack:
         x, y = stack.pop() #replace the 0, 0 in stack with x, y
 
-        if x == size - 1 and y == size -1:
+        if x == size - 2 and y == size - 2:
             return True
         
         if (x, y) in visited: #check if we've been here before
@@ -59,11 +59,9 @@ def is_solvable(grid):
         visited.add((x, y)) #add this spot to the "we've been here before" list
 
         if x < size and grid[1][x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
-            #if x +1 <= size:
             stack.append((x+1, y))
 
         if y < size - 1 and grid[0][x][y+1] == 0: #check the spot upwards for a wall
-            #if y+1 <= size:
             stack.append((x, y+1))
         
         if x > 0 and grid[1][x][y] == 0: #check the spot leftwards for a wall
@@ -110,11 +108,12 @@ def draw_maze(grid):
                 turtle.penup()
         count_col += 1 #add one for each column the turtle completes
         turtle.goto(x=25+(count_col*25), y=0)
+    turtle.hideturtle() #hide the turtle after it finished drawing everything.
 
 
 def final_maze(): #this function will be ran every time the user wants a new maze.
     while True:
-        maze = maze_gen()
+        maze = maze_gen() #run the function and set it's value to a variable
         if is_solvable(maze): #is_solvable returns a boolean
             draw_maze(maze)
             break
