@@ -39,7 +39,19 @@ def maze_gen():
     for column in columns:
         for i in range(12): #same thing here
             column.append(random.randint(0, 1))
-    rows[0][0] = 0
+    x, y = 0, 0
+    size = 12 #this is a 12x12 grid
+    while x < size - 1 or y < size - 1:
+        if x < size - 1 and (y == size - 1 or random.choice([True, False])):
+            columns[x][y] = 0
+            x += 1
+        elif y < size - 1:
+            rows[x][y] = 0
+            y += 1
+    rows[0][0] = 0 #entrance
+    columns[0][0] = 0
+    rows[size-1][size-1] = 0 #exit
+
     return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
 #create a function to check if the maze is solvable.
@@ -60,16 +72,16 @@ def is_solvable(grid):
 
         visited.add((x, y)) #add this spot to the "we've been here before" list
 
-        if x < size - 1 and col_grid[x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
+        if x < size - 1 and col_grid[x][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
             stack.append((x+1, y))
 
         if y < size - 1 and row_grid[x][y+1] == 0: #check the spot upwards for a wall
             stack.append((x, y+1))
         
-        if x > 0 and col_grid[x][y] == 0: #check the spot leftwards for a wall
+        if x > 0 and col_grid[x-1][y] == 0: #check the spot leftwards for a wall
             stack.append((x-1, y))
         
-        if y > 0 and row_grid[x][y] == 0: #check the spot downwards for a wall
+        if y > 0 and row_grid[x][y-1] == 0: #check the spot downwards for a wall
             stack.append((x, y-1))
 
     return False #return false if we have checked every index and there is no exit
@@ -82,9 +94,9 @@ def draw_maze(grid):
     count_row = 0 #counter for how many rows the turtle has completed
     count_col = 0 #counter for how many columns the turtle has completed
     for row in grid[0]: #make a nested loop for drawing rows
+        if count_row == 11:#check if we are on the final row, which is actually the top side. If we are, make turtle guarantee that there is a gap in the wall (make sure turtle doesn't draw over the gap)
+            break
         for spot in row:
-            if count_row == 11: #stop before the 12th row (which is actually the top side). This prevents it from sealing off the exit
-                break
             if spot == 0: #don't draw if that spot is a 0
                 turtle.penup()
                 turtle.forward(25)
@@ -99,8 +111,6 @@ def draw_maze(grid):
     turtle.right(-90)
     for column in grid[1]: #make a nested for loop for drawing the columns.
         for spot in column:
-            if count_col == 11: #stop before the 12th column (which is actually the right side). This prevents it from the turtle from ending up outside of the maze
-                break
             if spot == 0: #don't draw if spot is 0
                 turtle.penup()
                 turtle.forward(25)
