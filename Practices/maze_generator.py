@@ -39,17 +39,7 @@ def maze_gen():
     for column in columns:
         for i in range(12): #same thing here
             column.append(random.randint(0, 1))
-    x, y = 0, 0
-    size = len(rows)
-    while x < size - 1 or y < size - 1: #make at least one guaranteed path
-        if x < size - 1:
-            columns[x+1][y] = 0
-            x += 1
-        if y < size - 1:
-            rows[x][y + 1] = 0
-            y += 1
-    rows[0][0] = 0 #make a guaranteed entrance and exit.
-    rows[-1][-1] = 0
+    rows[0][0] = 0
     return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
 #create a function to check if the maze is solvable.
