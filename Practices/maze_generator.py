@@ -33,6 +33,7 @@ def maze_gen():
     [],
     []
 ]
+    size = 12 #this is a 12x12 grid
     for row in rows:
         for i in range(12): #since this is a 12x12 square, this must run 12 times to fill all spots
             row.append(random.randint(0, 1))
@@ -40,17 +41,20 @@ def maze_gen():
         for i in range(12): #same thing here
             column.append(random.randint(0, 1))
     x, y = 0, 0
-    size = 12 #this is a 12x12 grid
+    path_coords = set()
     while x < size - 1 or y < size - 1:
+        path_coords.add((x, y))
         if x < size - 1 and (y == size - 1 or random.choice([True, False])):
             columns[x][y] = 0
             x += 1
-        elif y < size - 1:
+        else:
             rows[x][y] = 0
             y += 1
+    path_coords.add((11, 11))
     rows[0][0] = 0 #entrance
     columns[0][0] = 0
-    rows[size-1][size-1] = 0 #exit
+    rows[size-1][size-1] = 0
+    columns[size-1][size-1] #exit
 
     return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
@@ -72,16 +76,16 @@ def is_solvable(grid):
 
         visited.add((x, y)) #add this spot to the "we've been here before" list
 
-        if x < size - 1 and col_grid[x][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
+        if x < size - 1 and col_grid[x+1][y] == 0: #check the spot to the right for a wall. We are going into the column list for this.
             stack.append((x+1, y))
 
         if y < size - 1 and row_grid[x][y+1] == 0: #check the spot upwards for a wall
             stack.append((x, y+1))
         
-        if x > 0 and col_grid[x-1][y] == 0: #check the spot leftwards for a wall
+        if x > 0 and col_grid[x][y] == 0: #check the spot leftwards for a wall
             stack.append((x-1, y))
         
-        if y > 0 and row_grid[x][y-1] == 0: #check the spot downwards for a wall
+        if y > 0 and row_grid[x][y] == 0: #check the spot downwards for a wall
             stack.append((x, y-1))
 
     return False #return false if we have checked every index and there is no exit
