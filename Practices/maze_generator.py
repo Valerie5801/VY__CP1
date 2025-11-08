@@ -4,67 +4,40 @@ import random
 
 #make a function to put random values inside of the rows and columns lists
 def maze_gen():
-    #make two lists inside of a list; one for the rows and one for the columns. make each list inside of the list empty so we can randomize them (for the walls) any time we want. These are like blank slates. This square will be a 12x12 because of the size of the square, and by doing a 6x6 and the nested for loop run twice will make the maze be repetitive.
-    rows = [ #12 lists inside of each list because its a 12x12
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
-]
-    columns = [
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
-]
     size = 12 #this is a 12x12 grid
+    #make two lists inside of a list; one for the rows and one for the columns. make each list inside of the list empty so we can randomize them (for the walls) any time we want. These are like blank slates. This square will be a 12x12 because of the size of the square, and by doing a 6x6 and the nested for loop run twice will make the maze be repetitive.
+    rows = [[] for i in range(size)] #a more concise way to make 12 lists inside of a list.
+    columns = [[] for i in range(size)]
+
+    #generate random walls
     for row in rows:
-        for i in range(12): #since this is a 12x12 square, this must run 12 times to fill all spots
+        for i in range(size):
             row.append(random.randint(0, 1))
     for column in columns:
-        for i in range(12): #same thing here
+        for i in range(size):
             column.append(random.randint(0, 1))
-    x, y = 0, 0
-    path_coords = set()
-    while x < size - 1 or y < size - 1:
-        path_coords.add((x, y))
-        if x < size - 1 and (y == size - 1 or random.choice([True, False])):
-            columns[x][y] = 0
-            x += 1
-        elif y < size - 1:
-            rows[x][y] = 0
-            y += 1
-    path_coords.add((11, 11))
-    rows[0][0] = 0 #entrance
-    columns[0][0] = 0
-    rows[size-1][size-1] = 0
-    columns[size-1][size-1] = 0 #exit
 
-    for i in range(size):
-        for j in range(size):
-            if (i, j) not in path_coords:
-                rows[i][j] = random.randint(0, 1)
-                columns[i][j] = random.randint(0, 1)
+    #make a guaranteed path
+    for i in range(size-1):
+        # clear both walls in the current cell
+        rows[i][i] = 0
+        columns[i][i] = 0
+
+        # also clear the approaching walls in the next cell(s)
+        rows[i+1][i] = 0
+        columns[i][i+1] = 0
+
+    rows[0][0] = 0 #clear the nearby walls of the entrance
+    columns[0][0] = 0
+
+    rows[size-2][size-2] = 0 #clear the nearby walls and 2nd most nearby walls of the exit
+    columns[size-2][size-2] = 0
+    rows[size-1][size-1] = 0
+    columns[size-1][size-1] = 0
 
     return rows, columns #this returns with index values so we can access each one. row_grid's index is 0 while col_grid is a 1.
 
-#create a function to check if the maze is solvable.
+#create a function to check if the maze is solvable. This will act as a fail-safe incase the maze generated from the maze_gen function really isn't solvable.
 def is_solvable(grid):
     row_grid, col_grid = grid #to improve readability, set rows to grid[0] and columns to grid[1]
     size = len(row_grid) #a size of 12
@@ -118,7 +91,7 @@ def draw_maze(grid):
         turtle.goto(x=0, y=25+(count_row*25))
     turtle.penup()
     turtle.goto(x=25, y=0) #go to the bottom left corner and face up to start drawing columns
-    turtle.right(-90)
+    turtle.left(90)
     for column in grid[1]: #make a nested for loop for drawing the columns.
         for spot in column:
             if spot == 0: #don't draw if spot is 0
@@ -155,6 +128,6 @@ for i in range(4): #make a loop that makes a square
         turtle.forward(250)
     else: #if not, just draw a straight line.
         turtle.forward(275)
-    turtle.right(-90)
+    turtle.left(90)
 final_maze()
 turtle.done()
