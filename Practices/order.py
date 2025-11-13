@@ -1,6 +1,6 @@
 #VY 2nd Order Up
 import time
-#create four dictionaries, one for each of these categories: drinks, sides, and main meals
+#create three dictionaries, one for each of these categories: drinks, sides, and main meals
 #each dictionary must have at least 4 different menu item, and each menu item must have a cost. Do a nested dictionary for this.
 drinks = {
     #item as key: price as value
