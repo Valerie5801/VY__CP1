@@ -40,81 +40,74 @@ def view_menu():
 #make a function for ordering drinks
 def order_drink():
     while True:
-        user_drink = input("What drink would you like?(n if you're not ready): ")
+        user_drink = input("What drink would you like?(capitalize your order): ")
         #if the item is on a different dictionary, print something else and tell them to order again.
         if user_drink.capitalize() in sides or user_drink.capitalize() in mains:
             print("Please choose a drink as of right now.")
-        #give the user the option to say they aren't ready yet.
-        elif user_drink == "n":
-            print("Let me know when you are ready to order.")
-            break
         #if the drink is not found in the dictionary, tell them to order again
-        elif user_drink.capitalize() not in drinks:
-            print("Sorry, that is not on our menu. Please choose an available option.")
+        elif user_drink not in drinks:
+            print("Sorry.")
+            if user_drink.capitalize() in drinks: #fail safe in case user didn't capitalize because keys are case-sensitive
+                print("You need to capitalize.")
+            else: #in case the user typed in something that isn't on the menu
+                print("That drink is not on our menu. Please order again.")
         else:
             return user_drink
 
 #make a function for ordering a main
 def order_main():
     while True:
-        user_main = input("What main meal do you want?(n if you're not ready): ")
+        user_main = input("What main meal do you want?(capitalize your order): ")
         #if the item is on a different dictionary, print something else and tell them to order again.
         if user_main.capitalize() in sides or user_main.capitalize() in drinks:
             print("Please choose a main meal as of right now.")
-        #give the user the option to say they aren't ready yet.
-        elif user_main == "n":
-            print("Alright! Let me know when you're ready to order.")
-            break
-        elif user_main.capitalize() not in mains:
-            print("Sorry, that is not on our menu. Please choose an available option.")
+        #if the main is not found in the dictionary, tell them to order again
+        elif user_main not in mains:
+            print("Sorry.")
+            if user_main.capitalize() in mains: #fail safe in case user didn't capitalize because keys are case-sensitive
+                print("You need to capitalize.")
+            else: #in case the user typed something that isn't on the menu
+                print("That item is not on our menu. Please order again.")
         else:
             return user_main
 
-#make a function for ordering sides
+#make a function for ordering one side
 def first_side():
-    two_sides = False
     while True:
-        first_side = input("What will your first side be?(n if you're not ready): ")
+        first_side = input("What will your first side be?(capitalize your order): ")
         #if the item is on a different dictionary, print something else and tell them to order again.
         if first_side.capitalize() in drinks or first_side.capitalize() in mains:
             print("Please choose a side as of right now.")
-        #give the user the option to say they aren't ready yet.
-        elif first_side == "n":
-            print("Okay. Let me know when you want to order.")
-            continue
-        #if the side is not found in the dictionary, tell them to order again.
-        elif first_side.capitalize() not in sides:
-            print("Sorry, that is not on our menu. Please choose an available option.")
+        #if the side is not found in the dictionary, tell them to order again
+        elif first_side not in sides:
+            print("Sorry.")
+            if first_side.capitalize() in sides: #fail safe in case user didn't capitalize because keys are case-sensitive
+                print("You need to capitalize.")
+            else: #in case the user typed something that isn't on the menu
+                print("That side is not on our menu. Please order again.")
         else:
             return first_side
 
+#make a function for ordering a second side
 def second_side():
-    #ask the user if they want a second one.
-    ask_second = input("Would you like a second side?(y/n): ")
-    if ask_second == "y":
-        while True:
-            second_side = input("What will your second side be?(n if you're not ready): ")
-            #if the item is on a different dictionary, print something else and tell them to order again.
-            if second_side.capitalize() in drinks or second_side.capitalize() in mains:
-                print("Please choose a side as of right now.")
-            #give the user the option to say they aren't ready yet.
-            elif second_side == "n":
-                print("Let me know when you know what you want.")
-                break
-            #if the side is not found in the dictionary, tell them to order again.
-            elif second_side.capitalize() not in sides:
-                print("Sorry, that is not on our menu. Please choose an available option.")
-            else:
-                return second_side
-    elif ask_second == "n":
-        print("Alright then.")
-        return None
+    while True:
+        second_side = input("What will your second side be?(capitalize your order): ")
+        #if the item is on a different dictionary, print something else and tell them to order again.
+        if second_side.capitalize() in drinks or second_side.capitalize() in mains:
+            print("Please choose a side as of right now.")
+        #if the item is not found in the dictionary, tell them to order again
+        elif second_side not in sides:
+            print("Sorry.")
+            if second_side.capitalize() in sides: #fail safe in case user didn't capitalize because keys are case-sensitive
+                print("You need to capitalize.")
+            else: #in case the user typed something that isn't on the menu
+                print("That side is not on our menu. Please order again.")
+        else:
+            return second_side
         
 #make a function for adding up all values
 def add_total(drink, main, one_side, second_side):
-    total = drinks[drink] + mains[main] + sides[one_side]
-    if sides[second_side]:
-        total += sides[second_side]
+    total = drinks[drink] + mains[main] + sides[one_side] + sides[second_side]
     return total
 
 
@@ -126,31 +119,19 @@ while True:
     user_choice = input("Do you want to order or see the menu?(o/m): ")
     if user_choice == "o":
         #get all of the items(the keys) that the user ordered, get their price (the values) and add it all up
-        drink_choice = order_drink()
+        drink_choice = order_drink() #set them to variables so their values don't change
         main_choice = order_main()
         first_side_choice = first_side()
         second_side_choice = second_side()
-        if second_side_choice:
-            final_total = add_total(drink_choice, main_choice, first_side_choice, second_side_choice)
-            print(f"Your order: \n\tDrink: {drink_choice} \n\tMain Course: {main_choice} \n\tSide Dishes: \n\t\t{first_side_choice} \n\t\t{second_side_choice} \nTotal Cost: ${final_total}")
-        else:
-            final_total = add_total(drink_choice, main_choice, first_side_choice, 0)
-            print(f"Your order: \n\tDrink: {drink_choice} \n\tMain Course: {main_choice} \n\tSide Dishes: \n\t\t{first_side_choice} \nTotal Cost: ${final_total}")
+        #add all of the prices up and print out the order
+        final_total = add_total(drink_choice, main_choice, first_side_choice, second_side_choice)
+        print(f"Your order: \n\tDrink: {drink_choice} \n\tMain: {main_choice} \n\tSide Dishes: \n\t\t{first_side_choice} \n\t\t{second_side_choice} \nTotal Cost: ${round(final_total, 2)}")
         break
     elif user_choice == "m":
+        #print the menu
         print("Here is our menu.")
         view_menu()
-        time.sleep(3)
+        time.sleep(2)
     else:
+        #stupid proof it so no other orders can get through
         print("Sorry, I didn't get that.")
-
-
-#finally, print all of the items(set as keys) and print out the price of the order.
-
-
-
-
-
-
-
-#wawa :(
