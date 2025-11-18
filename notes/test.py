@@ -6,3 +6,5 @@ print("heyo :)")
 
 print("t is not doing well oh well ummmm why pjsk is become more sad")
 print("NENENENENENENENENENENENENENENENENE")
+
+print("oyasumi oyasumi close your eyes and you'll leave this dream")
