@@ -13,9 +13,9 @@ user_input = input("What number do you want the factorial of?: ")
         #number -= 1
         #list.append(number)
 def get_factorial():
-    number = user_input                   #Must be single equals sign in order for it to be the assignment sign
+    number = int(user_input)              #Must be single equals sign in order for it to be the assignment sign
     total = 1                             #Also must be single equals sign in order for it to be the assignment sign
-    while number >= 0:
+    while number > 0:                     #This must be strictly if the number is greater than zero to prevent multiplying the total by 0, which will cause the result to always be 0.
         total *= number
         number -= 1
         #series_nums.append(number)       #Wait hold on...why do we need a list?
