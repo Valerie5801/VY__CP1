@@ -3,10 +3,10 @@
 #Import the random library
 
 #user_location is 1                     #The room where the user is located in. This will change when the user moves inside of each room function.
-#list spirit_location is 3, 6, 8, 5     #Where the user can encounter enemies, probably change later
+#list spirit_location is 3, 6, 4        #Where the user can encounter enemies, probably change later
 #boss_location is 9                     #The final room
 
-#User stats (placeholder numbers)
+#User stats (placeholder numbers for all numbers)
 #dictionary user_stats
     #Health is 50
     #Attack is 5
@@ -36,34 +36,35 @@
         #Property is Healing            #meaning it's a healing item
         #Effect is 10                   #Heals 10 hp
         #in_inventory is False          #Checking if user has the item
-        #Room is TBD                    #decide what room this will be in (draw the dang map will ya)
+        #Room is 7                      #decide what room this will be in
     #dictionary healing_potion
         #Use is 1
         #Property is Healing
         #Effect is 25
         #in_inventory is False
-        #Room is TBD
+        #Room is 2
     #dictionary defense_potion
         #Use is 1
         #Property is Defense
         #in_inventory is False
-        #Room is TBD
+        #Room is 5
     #dictionary attack_potion
         #Use is 1
         #Property is Attack
         #in_inventory is False
-        #Room is TBD
+        #Room is 2
     #dictionary dagger
         #Use is Equip                   #Meaning user can equip or not equip
         #Property is Attack             #raises attack
         #Effect is 5                    #by 5
         #is_equipped is False           #This will be changed later if the user decides to equip it.
-        #Room is TBD
+        #Room is 6
     #dictionary shield
         #Use is Equip
         #Property is Defense
         #Effect is 3
         #is_equipped is False
+        #Room is 6
 
 #Combat functions
 #Define user_combat with parameter enemy_stat:                  #I don't want to change the enemy_stats dictionary as I'll be using it multiple times. The dictionary will instead be a parameter, so I should be able to access the values like normal.
@@ -80,13 +81,22 @@
             #Set enemy's health to 0
         #Show "You attacked. [enemy name] now has [put enemy's health here] health left."   #If I add multiple enemies, change this.
     #If user_action is 2:
-        #Use the random library to pick a number from 1 to 10. Set this number to variable flee_chance
-        #If flee_chance is less than or equal to 3:             #This is so if flee_chance is 1, 2, or 3, the user flees successfully. If not, they stay in the battle.
-            #Show "You successfully ran away."
-            #Set enemy's health to -1                           #This is needed so when I make the main combat function later, I can use the enemy's health to check if the user just ran away or actually defeated it.
-                                                                    #This way, I can see if the user deserves to get rewards or not.
-        #Else:
-            #Show "You failed to run away."
+        #If the enemy that the user is fighting is the final boss:
+            #Show "Are you sure you want to back out?" and get the user's response, setting it to variable user_flee
+            #If user_flee is yes:
+                #Show "You escaped, for now."
+                #Set the user's room number to room 8, the room that is before room 9, the final room.
+                #Return user_stats and enemy_stats
+            #Else:
+                #Return user_stats and enemy_stats
+        #Else if the enemy that the user is fighting is a spirit:
+            #Use the random library to pick a number from 1 to 10. Set this number to variable flee_chance
+            #If flee_chance is less than or equal to 3:             #This is so if flee_chance is 1, 2, or 3, the user flees successfully. If not, they stay in the battle.
+                #Show "You successfully ran away."
+                #Set enemy's health to -1                           #This is needed so when I make the main combat function later, I can use the enemy's health to check if the user just ran away or actually defeated it.
+                                                                        #This way, I can see if the user deserves to get rewards or not.
+            #Else:
+                #Show "You failed to run away."
     #If user_action is 3 AND the enemy that the user is fighting is a spirit:
         #Show "You try to erase the spirit from existence."
         #Use the random library to pick a number from 1 to 10. Set this number to variable expel_chance.
@@ -108,7 +118,7 @@
     #Return user_stats and enemy_stats
 
 
-#Define enemy_combat:
+#Define enemy_combat with parameter enemy_stat:
     #Show "Enemy's Turn"
     #Subtract the enemy's attack stat with the user's defense stat, and set this value to the variable defense.
     #If the user guarded:
@@ -136,10 +146,106 @@
 #Define main_battle with parameter enemy:
     #Show "A wild [enemy name here] appeared!"
     #Use the random module to select either 1 or 2. Set this value to the variable going_first.
-    #If going_first is 1:                                       #User goes first if it's 1, enemy goes first if it's 2.
-        #Show "You are going first."
-        #If the enemy that the user is fighting is the spirit:
+    #If the enemy that the user is fighting is a spirit:
+        #If going_first is 1:                                       #User goes first if it's 1, enemy goes first if it's 2.
+            #Show "You are going first."
+            #Run the user_combat function with spirit_stats as the parameter
+            #Set user_stats and current_enemy to the returned values of the function      #Needed since I don't want to change the original dictionary that holds the base enemy's stats.
+            #Make a new variable turn and set it equal to "enemy"
             #While True loop:
-                #Run the user_combat function with the parameters of the spirit.
-                #Set user_stats and current_enemy to the returned values of the function      #Needed since I don't want to change the original dictionary that holds the base enemy's stats.
-                #Run the enemy_combat function with the arameters
+                #If turn is "enemy":
+                    #Show "Enemy's turn"
+                    #Run the enemy_combat function with spirit_stats as the parameter
+                    #Set user_stats and current_enemy to the returned values of the function
+                    #Set turn to "player"
+                    #If the user's health is 0:
+                        #Show "You lose"
+                        #Break                                                            #When the restart function is made, let the user have the option to restart
+                    #Else if the enemy's health is 0:
+                        #Show "You win!"
+                        #Break                                                            #When the ability to move throughout rooms is made, let the user have the option to move (as when the user enters a room with an enemy, that encounter is first.)
+                #If turn is "player":
+                    #Show "Your turn."
+                    #Run the user_combat function with spirit_stats as the parameter
+                    #Set user_stats and current_enemy to the returned values of the function
+                    #Set turn to "enemy"
+                #If the user's health is 0:
+                        #Show "You lose"
+                        #Break                                                            #When the restart function is made, let the user have the option to restart
+                    #Else if the enemy's health is 0:
+                        #Show "You win!"
+                        #Break 
+        #Else if going_first is 2:
+            #Show "Enemy is going first."
+            #Run the enemy_combat function with spirit_stats as the parameter
+            #Set user_stats and current_enemy to the returned values of the function
+            #Make a new variable turn and set it equal to "player"
+            #While True loop:
+                #If turn is "enemy":
+                    #Show "Enemy's turn"
+                    #Run the enemy_combat function with spirit_stats as the parameter
+                    #Set user_stats and current_enemy to the returned values of the function
+                    #Set turn to "player"
+                    #If the user's health is 0:
+                        #Show "You lose"
+                        #Break                                                            #When the restart function is made, let the user have the option to restart
+                    #Else if the enemy's health is 0:
+                        #Show "You win!"
+                        #Break                                                            #When the ability to move throughout rooms is made, let the user have the option to move (as when the user enters a room with an enemy, that encounter is first.)
+                #If turn is "player":
+                    #Show "Your turn."
+                    #Run the user_combat function with spirit_stats as the parameter
+                    #Set user_stats and current_enemy to the returned values of the function
+                    #Set turn to "enemy"
+                #If the user's health is 0:
+                        #Show "You lose"
+                        #Break                                                            #When the restart function is made, let the user have the option to restart
+                    #Else if the enemy's health is 0:
+                        #Show "You win!"
+                        #Break
+    #Return user_stats and the enemy's stats
+
+
+#Functions related to the menu (the thing where the user can select if they want to explore, move, or use an item)
+#Define movement with parameter of the user's location:
+    #if the user's location is 1:
+        #Let the user go to rooms 4 or 2
+    #else if the user's location is 2:
+        #Let the user go to rooms 4, 1, or 6
+    #else if the user's location is 3:
+        #Let the user go to rooms 5, 7, or 8
+    #else if the user's location is 4:
+        #Let the user go to rooms 1, 2, or 7
+    #else if the user's location is 5:
+        #Let the user go to rooms 6, 7, 3, or 8
+    #else if the user's location is 6:
+        #Let the user go to rooms 2, 5, or 8
+    #else if the user's location is 7:
+        #Let the user go to rooms 4, 5, or 3
+    #else if the user's location is 8:
+        #Let the user go to rooms 5, 3, 6, or 9
+    #Set the user's location to the room they selected.
+    #Return the user's location
+
+#Define inventory with parameters of the item dictionary and user's stats:
+    #Look through the items and check the is_inventory key to see if it's set to True or False.
+    #For all the items that are in the inventory, print them out to the user.
+    #Ask the user if they want to use or equip an item.
+    #If the user says yes:
+        #Ask what item they want to use/equip
+        #Check if it's in the dictionary. If it's not, ask the user to try again.
+        #If the user changes their mind, return the user's stats item dictionary and end the function.
+        #If the item that the user selected is a 1 use, check the stat that it affects and change the user's stat accordingly.
+        #If the item that the user selected is an equipable (the dagger and shield), set their is_equipped key to True and check what stat it affects, and change the user's stat accordingly.
+    #If the user says no:
+        #Ask the user if they want to unequip an item:
+        #If the user says yes:
+            #Ask what item they want to unequip.
+            #If the item is a 1 use, ask the user to try again.
+            #If the user changes their mind, return the user's stats item dictionary and end the function.
+            #If the item is either the sword and shield (check for is_equipped) and it's currently equipped, set that item's is_equipped to False, check what stat it affects, and remove that effect accordingly. 
+        #If the user says no:
+            #exit the function and return the user's stats and the dictionary of items.
+
+#Define explore with parameters of the item dictionary and user's location:
+    #Look through the dictionary of items and check each of the items room number that they are in. If the user's location is the same as the item location, put it in the item_room list.
