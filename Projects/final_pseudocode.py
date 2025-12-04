@@ -1,4 +1,4 @@
-#VY 2nd Final Project
+#VY 2nd Final Project Pseudocode
 
 #Import the random library
 
