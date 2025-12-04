@@ -203,6 +203,7 @@
                     #Else if the enemy's health is 0:
                         #Show "You win!"
                         #Break
+    #If the user is fighting the final boss, do something similar to above, however use the final boss function instead and return the final boss's stats.
     #Return user_stats and the enemy's stats
 
 
@@ -240,12 +241,52 @@
     #If the user says no:
         #Ask the user if they want to unequip an item:
         #If the user says yes:
-            #Ask what item they want to unequip.
+            #Ask what item they want to uneaquip.
             #If the item is a 1 use, ask the user to try again.
             #If the user changes their mind, return the user's stats item dictionary and end the function.
-            #If the item is either the sword and shield (check for is_equipped) and it's currently equipped, set that item's is_equipped to False, check what stat it affects, and remove that effect accordingly. 
+            #If the item is either the sword and shield (check for is_equipped) and it's currently equipped, set that item's is_equipped to False, check what stat it affects, and remove that effect accordingly.
+            #Set the item's location to the same location as the user's location, showing that the user dropped it in the room that they were in. 
         #If the user says no:
             #exit the function and return the user's stats and the dictionary of items.
 
-#Define explore with parameters of the item dictionary and user's location:
-    #Look through the dictionary of items and check each of the items room number that they are in. If the user's location is the same as the item location, put it in the item_room list.
+#Define explore with parameters of the item dictionary:
+    #Look through the dictionary of items and check each of the items room number that they are in. If the user's location is the same as the item location, put the name of the item in the item_room list (a few rooms have two items in them, so I'll make a list to accomodate for that.).
+    #Show the user the list of items that are in the room and ask the user if they want to take an item.
+    #If they say yes, ask them what item they want to take.
+    #If the item is not in the room, ask them to select an existing item in the room.
+    #If the item is in the room, find the is_inventory key of the item and make it to True.
+    #Remove the item's name from the list. If the list is not empty, show what else is in the list and ask the user if they want to take it.
+    #If there's not, end the function.
+    #Return the item dictionary
+
+#Define menu:
+    #Use the above three functions for this function.
+    #Tell the user that they can either look in their inventory, explore, or move to another room.
+    #If the user wants to move to another room, run the movement function.
+    #If the user wants to look in the inventory, run the inventory function.
+    #If the user wants to explore, run the explore function.
+
+
+#Function for restarting.
+#Define restart:
+    #Ask the user if they want to restart (let them know it will reset their progress).
+    #If they do:
+        #Set all of the variables and dictionaries to their values that they were at the start of the program.
+    #End the function.
+
+
+#Main game
+
+#Introduce the user to the setting and their main objective at the start of the game.
+#While True loop:
+    #If the user's health is 0:
+        #Run the restart function
+    #If the final boss's health is 0:
+        #Congratulate the user and run the restart function
+    #Run the menu function
+    #If the user's location is 9 (the same room where the final boss is at):
+        #Ask the user if they want to fight the final boss
+        #If so, run the main_battle function with the final boss's stats as the parameters.
+    #Check if the user's location is in the list of where the basic enemies are:
+        #If it is, run the main_battle function.
+        #If not, continue a new iteration of the loop (go back to the menu function)
