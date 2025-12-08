@@ -28,7 +28,7 @@ boss_stats = {
     "Charge counter": 0
 }
 
-items = {
+game_items = {
     "Bandage": {
         "Use": 1,
         "Property": "Health",
@@ -168,4 +168,107 @@ def boss_combat():
 def main_battle(enemy):
     print(f"{enemy["Type"]} appeared!")
     going_first = random.randint(1, 2)
-    
+    if going_first == 1 and enemy["Type"] == "Spirit":
+        print("You are going first.")
+        user_stats, enemy_spirit = user_combat(spirit_stats)
+        turn = "enemy"
+    elif going_first == 1 and enemy["Type"] == "Warden":
+        print("You are going first.")
+        user_stats, boss_stats = user_combat(boss_stats)
+        turn = "enemy"
+    elif going_first == 2 and enemy["Type"] == "Spirit":
+        print(f"{enemy["Type"]} is going first.")
+        user_stats, enemy_spirit = spirit_combat(spirit_stats)
+        turn = "player"
+    elif going_first == 2 and enemy["Type"] == "Warden":
+        print(f"{enemy["Type"]} is going first.")
+        user_stats, boss_stats = boss_combat()
+        turn = "player"
+    if going_first == 2 and enemy["Type"] == "Spirit":
+        while True:
+            if turn == "enemy":
+                print(f"{enemy["Type"]}'s turn.")
+                user_stats, enemy_spirit = spirit_combat(enemy_spirit)
+                turn = "player"
+                if user_stats["Health"] == 0:
+                    print("You lose.")
+                    break
+                elif enemy_spirit["Health"] == 0:
+                    print("You win!")
+                    break
+            elif turn == "player":
+                print(f"{enemy["Type"]}'s turn.")
+                user_stats, enemy_spirit = user_combat(enemy_spirit)
+                turn = "enemy"
+                if user_stats["Health"] == 0:
+                    print("You lose.")
+                    break
+                elif enemy_spirit["Health"] == 0:
+                    print("You win!")
+                    break
+    if going_first == 1 and enemy["Type"] == "Warden":
+        while True:
+            if turn == "enemy":
+                print(f"{enemy["Type"]}'s turn.")
+                user_stats, boss_stats = boss_combat()
+                turn = "player"
+                if user_stats["Health"] == 0:
+                    print("You lose.")
+                    break
+                elif boss_stats["Health"] == 0:
+                    print("You win!")
+                    break
+            elif turn == "player":
+                print(f"{enemy["Type"]}'s turn.")
+                user_stats, boss_stats = user_combat(boss_stats)
+                turn = "enemy"
+                if user_stats["Health"] == 0:
+                    print("You lose.")
+                    break
+                elif boss_stats["Health"] == 0:
+                    print("You win!")
+                    break
+    return user_stats
+
+
+def movement():
+    if user_location == 1:
+        print("You can go to rooms 4 or 2.")
+    elif user_location == 2:
+        print("You can go to rooms 4, 1, or 6.")
+    elif user_location == 3:
+        print("You can go to rooms 5, 7, or 8.")
+    elif user_location == 4:
+        print("You can go to rooms 1, 2, or 7.")
+    elif user_location == 5:
+        print("You can go to rooms 3, 7, 8, or 6.")
+    elif user_location == 6:
+        print("You can go to rooms 2, 5, or 8.")
+    elif user_location == 7:
+        print("You can go to rooms 4, 5, or 3.")
+    elif user_location == 8:
+        print("You can go to rooms 5, 3, 6, or 9.")
+    next_room = input("What location would you like to go to?(as a number): ")
+    print(f"You make you way over to {next_room} room.")
+    return next_room
+
+
+def inventory():
+    user_equip = input("Do you want to use/equip an item?(y/n): ")
+    if user_equip.lower() == "y":
+        is_inventory = []
+        for exist_item in game_items.items():
+            if exist_item["Inventory"]:
+                is_inventory.append(exist_item)
+        print("Here are the items in your inventory:")
+        for item in is_inventory:
+            print(item)
+        while True:
+            item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
+            if item_used not in is_inventory:
+                print("That isn't in the dictionary. Please try again.")
+                continue
+            elif item_used.lower() == "no":
+                continue
+            elif item_used["Use"] == 1:
+                if is_inventory
