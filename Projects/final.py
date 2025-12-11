@@ -1,5 +1,6 @@
 #VY 2nd Final Project
 import random
+import time
 
 user_location = 1
 spirit_locations = [3, 6, 4]
@@ -55,7 +56,7 @@ game_items = {
         "Property": "Attack",
         "Effect": 10,
         "Inventory": False,
-        "Room": 2
+        "Room": 4
     },
     "Dagger": {
         "Use": "Equip",
@@ -69,7 +70,7 @@ game_items = {
         "Property": "Defense",
         "Effect": 10,
         "Inventory": False,
-        "Room": 4
+        "Room": 6
     }
 }
 
@@ -83,10 +84,10 @@ back_items = game_items
 def user_combat(enemy_stats):
     print("Your turn.")
     if enemy_stats["Type"] == "Spirit":
-        print("1. Attack \n2. Flee \n 3. Expel \n4. Guard")
+        print("1. Attack \n2. Flee \n3. Expel \n4. Guard")
     elif enemy_stats["Type"] == "Warden":
         print("1. Attack \n2. Flee \n 3. Charged Attack \n4. Guard")
-    
+    time.sleep(1)
     while True:
         user_action = input("What would you like to do?(1/2/3/4): ")
 
@@ -94,13 +95,13 @@ def user_combat(enemy_stats):
             damage = user_stats["Attack"] - enemy_stats["Defense"]
             enemy_stats["Health"] -= damage
             if enemy_stats["Health"] < 0:
-                enemy_stats["Health"] == 0
+                enemy_stats["Health"] = 0
             print(f"You attacked. {enemy_stats["Type"]} took {damage} damage. It now has {enemy_stats["Health"]} health left.")
             break
         elif user_action == "2":
             flee_chance = random.randint(1, 10)
             if flee_chance <= 3: #add a way for the user to back out of the final boss battle and return them to the previous room.
-                enemy_stats["Health"] = -1
+                enemy_stats["Health"] = 0         #change this to 0 if possible to add rewards after fighting
                 print("You successfully ran away.")
             else:
                 print("You failed to run away.")
@@ -132,7 +133,6 @@ def user_combat(enemy_stats):
 
 
 def spirit_combat(enemy_stats):
-    print("Spirit's turn.")
     damage = enemy_stats["Attack"] - user_stats["Defense"]
     if user_stats["Guard"]:
         damage -= 2
@@ -146,98 +146,122 @@ def spirit_combat(enemy_stats):
     return user_stats, enemy_stats
 
 
-def boss_combat():
-    print("Warden's turn.")
+def boss_combat(enemy_stats):
     boss_action = random.randint(1, 2)
-    if boss_stats["Charge counter"] <= 2:
+    if enemy_stats["Charge counter"] <= 2:
         boss_action = 1
     
     if boss_action == 1:
         print("Warden does a normal attack.")
-        damage = boss_stats["Attack"] - user_stats["Defense"]
+        time.sleep(0.5)
+        damage = enemy_stats["Attack"] - user_stats["Defense"]
         if user_stats["Guard"]:
             damage -= 2
             user_stats["Guard"] = False
     elif boss_action == 2:
         print("Warden does a charged attack.")
-        damage = boss_stats["Attack"]
+        time.sleep(0.5)
+        damage = enemy_stats["Attack"]
         if user_stats["Guard"]:
             damage -= 2
             user_stats["Guard"] = False
-        boss_stats["Charge counter"] += 1
+        enemy_stats["Charge counter"] += 1
 
     user_stats["Health"] -= damage
     print(f"Warden did {damage} damage. You now have {user_stats["Health"]} health left.")
-    return user_stats, boss_stats
+    return user_stats, enemy_stats
 
 
 def main_battle(enemy):
+    enemy_spirit = spirit_stats
+    enemy_boss = boss_stats
     print(f"{enemy["Type"]} appeared!")
     going_first = random.randint(1, 2)
     if going_first == 1 and enemy["Type"] == "Spirit":
         print("You are going first.")
-        user_stats, enemy_spirit = user_combat(spirit_stats)
+        time.sleep(1)
+        user_stats, enemy_spirit = user_combat(enemy_spirit)
         turn = "enemy"
     elif going_first == 1 and enemy["Type"] == "Warden":
         print("You are going first.")
-        user_stats, boss_stats = user_combat(boss_stats)
+        time.sleep(1)
+        user_stats, enemy_boss = user_combat(enemy_boss)
         turn = "enemy"
     elif going_first == 2 and enemy["Type"] == "Spirit":
         print(f"{enemy["Type"]} is going first.")
-        user_stats, enemy_spirit = spirit_combat(spirit_stats)
+        time.sleep(1)
+        user_stats, enemy_spirit = spirit_combat(enemy_spirit)
         turn = "player"
     elif going_first == 2 and enemy["Type"] == "Warden":
         print(f"{enemy["Type"]} is going first.")
-        user_stats, boss_stats = boss_combat()
+        time.sleep(1)
+        user_stats, enemy_boss = boss_combat(enemy_boss)
         turn = "player"
-    if going_first == 2 and enemy["Type"] == "Spirit":
+    
+    if going_first == 1:
         while True:
             if turn == "enemy":
                 print(f"{enemy["Type"]}'s turn.")
-                user_stats, enemy_spirit = spirit_combat(enemy_spirit)
+                time.sleep(1)
+                if enemy["Type"] == "Spirit":
+                    user_stats, enemy_spirit = spirit_combat(enemy_spirit)
+                else:
+                    user_stats, enemy_boss = boss_combat(enemy_boss)
                 turn = "player"
+
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif enemy_spirit["Health"] == 0:
+                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 else:
                     continue
             elif turn == "player":
-                print(f"{enemy["Type"]}'s turn.")
-                user_stats, enemy_spirit = user_combat(enemy_spirit)
+                if enemy["Type"] == "Spirit":
+                    user_stats, enemy_spirit = user_combat(enemy_spirit)
+                else:
+                    user_stats, enemy_boss = user_combat(enemy_boss)
                 turn = "enemy"
+
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif enemy_spirit["Health"] == 0:
+                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 else:
                     continue
-    if going_first == 1 and enemy["Type"] == "Warden":
+    elif going_first == 2:
         while True:
             if turn == "enemy":
                 print(f"{enemy["Type"]}'s turn.")
-                user_stats, boss_stats = boss_combat()
+                time.sleep(1)
+                if enemy["Type"] == "Spirit":
+                    user_stats, enemy_spirit = spirit_combat(enemy_spirit)
+                else:
+                    user_stats, enemy_boss = boss_combat(enemy_boss)
                 turn = "player"
+
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif boss_stats["Health"] == 0:
+                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 else:
                     continue
             elif turn == "player":
-                print(f"{enemy["Type"]}'s turn.")
-                user_stats, boss_stats = user_combat(boss_stats)
+                if enemy["Type"] == "Spirit":
+                    user_stats, enemy_spirit = user_combat(enemy_spirit)
+                else:
+                    user_stats, enemy_boss = user_combat(enemy_boss)
                 turn = "enemy"
+
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif boss_stats["Health"] == 0:
+                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 else:
@@ -267,64 +291,61 @@ def movement():
     return next_room
 
 
-def inventory():
-    user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
-    if user_equip == "n":
-        is_inventory = []
-        for exist_item in game_items.keys():
-            if exist_item["Inventory"]:
-                is_inventory.append(exist_item)
+def inventory(existing_items):
+    is_inventory = []
+    for exist_item in existing_items.keys():
+        if exist_item["Inventory"]:
+            is_inventory.append(exist_item)
+    if is_inventory:
         print("Here are the items in your inventory:")
-        for item in is_inventory:
-            print(item)
-        if user_equip.lower() == "e":
-            while True:
-                item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
-                if item_used not in is_inventory:
-                    print("That isn't in your inventory. Please try again.")
-                    continue
-                elif item_used.lower() == "no":
-                    break
-                for exist_item in game_items.keys():
-                    if item_used == exist_item:
-                        for stat in user_stats.keys():
-                            if stat == exist_item["Property"]:
-                                exist_item["Effect"] += user_stats[stat]
-            print(f"You used {item_used}. Your {stat} stat is now {user_stats[stat]}")
-        elif user_equip.lower() == "u":
-            while True:
-                item_unequip = input("What item do you want to unequip?(dagger or shield, no to back out): ")
-                if item_unequip.capitalize() not in is_inventory:
-                    print("It currently isn't in your inventory.")
-                elif item_unequip == "no":
-                    break
-                for exist_item in game_items.keys():
-                    if item_unequip == exist_item and exist_item["Use"] == "Equip":
-                        for stat in user_stats.keys():
-                            if stat == exist_item["Property"]:
-                                exist_item["Effect"] -= user_stats[stat]
-            print(f"You unequipped {item_unequip}. Your {stat} stat is now {user_stats[stat]}")
-    return user_stats, game_items
+   """ #continue fixing indents        for item in is_inventory:
+                print(item)
+            user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
+            if user_equip.lower() == "e":
+                while True:
+                    item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
+                    if item_used not in is_inventory:
+                        print("That isn't in your inventory. Please try again.")
+                        continue
+                    elif item_used.lower() == "no":
+                        break
+                    for exist_item in existing_items.keys():
+                        if item_used == exist_item:
+                            for stat in user_stats.keys():
+                                if stat == existing_items[exist_item]["Property"]:
+                                    existing_items[exist_item]["Effect"] += user_stats[stat]
+                print(f"You used {item_used}. Your {stat} stat is now {user_stats[stat]}")
+            elif user_equip.lower() == "u":
+                while True:
+                    item_unequip = input("What item do you want to unequip?(dagger or shield, no to back out): ")
+                    if item_unequip.capitalize() not in is_inventory:
+                        print("It currently isn't in your inventory.")
+                    elif item_unequip == "no":
+                        break
+                    for exist_item in game_items.keys():
+                        if item_unequip == exist_item and exist_item["Use"] == "Equip":
+                            for stat in user_stats.keys():
+                                if stat == exist_item["Property"]:
+                                    exist_item["Effect"] -= user_stats[stat]
+                print(f"You unequipped {item_unequip}. Your {stat} stat is now {user_stats[stat]}")
+            elif user_equip.lower() == "n":
+                print("You decide to not use anything.")
+        elif not is_inventory:
+            print("There is nothing in your inventory.")"""
+    #return user_stats, game_items
 
 
-def explore():
-    for exist_item in game_items.keys():
-        if game_items[exist_item] == user_location:
-            print(f"{game_items[exist_item]} is in the room.")
+def explore(existing_items):
+    for exist_item in existing_items.keys():
+        if existing_items[exist_item]["Room"] == user_location:
+            print(f"{exist_item} is in the room.")
             user_take = input("Do you want to take it?(y/n): ")
             if user_take == "y":
-                while True:
-                    get_item = input("What item do you want to take?: ")
-                    if get_item.capitalize() != game_items[exist_item]:
-                        print("That item isn't in the room.")
-                    else: 
-                        for game_item in game_items.keys():
-                            if game_items[game_item] == get_item:
-                                game_items[game_item]["Inventory"] == True
-                                print(f"You took the {exist_item}")
+                existing_items[exist_item]["Inventory"] = True
+                print(f"You took the {exist_item}")
             elif user_take == "n":
                 print("You decide to leave it.")
-    return game_items
+    return existing_items
 
 
 def menu():
@@ -336,10 +357,10 @@ def menu():
         new_location = int(movement())
         new_inventory = game_items
     elif user_choice == "2":
-        new_inventory = inventory()
+        new_inventory = inventory(game_items)
         new_location = user_location
     elif user_choice == "3":
-        new_inventory = explore()
+        new_inventory = explore(game_items)
         new_location = user_location
     return new_location, new_inventory
 
@@ -360,6 +381,7 @@ def restart():
 while True:
     print("You find yourself in an old looking dungeon. How did you get here? Why are you here?")
     print("You need to fight your way out in order to escape. Let's start.")
+    time.sleep(1)
     while True:
         if user_stats["Health"] == 0:
             print("You have lost.")
@@ -375,8 +397,11 @@ while True:
         if user_location == boss_location:
             fight = input("Do you want to face the master?(y/n): ")
             user_stats, boss_stats = main_battle(boss_stats)
+            continue
         elif user_location in spirit_locations:
             user_stats, extra_entity = main_battle(spirit_stats)
+            spirit_locations.remove(user_location)
+            continue
         extra_entity = {}
         user_location, game_items = menu()
     if another_game:
