@@ -8,7 +8,7 @@ boss_location = 9
 extra_entity = {}
 user_stats = {
     "Health": 50,
-    "Attack": 5,
+    "Attack": 5000,
     "Defense": 2,
     "Guard": False,
     "Charge counter": 0
@@ -74,20 +74,38 @@ game_items = {
     }
 }
 
+game_map = {
+    "Connected One": [4, 2],
+    "Connected Two": [4, 1, 6],
+    "Connected Three": [5, 7, 8],
+    "Connected Four": [1, 2, 7],
+    "Connected Five": [3, 7, 8, 6],
+    "Connected Six": [2, 5, 8],
+    "Connected Seven": [4, 5, 3],
+    "Connected Eight": [5, 3, 6, 9],
+}
+
+notes = {
+    1: "I've been here for ages. I can't decide if I should leave or not. I'm scared of whatever is out there.",
+    4: "I'm going in circles. Can't tell if anyone is reading this, but if so, best of luck to you.",
+    6: "How old is this place, like seriously? It's really worn-down. Why does the warden still stay in this place?",
+    8: "My pen is dying, so I guess I can't write anymore...that sucks."
+}
+
 back_usr_location = user_location
 back_usr_stats = user_stats
 back_spirit_stats = spirit_stats
 back_boss_stats = boss_stats
 back_items = game_items
-another_game = True  # Initialize flag to track if user wants to restart
+another_game = True  #restart flag
 
 #Combat functions
 def user_combat(enemy_stats):
     print("Your turn.")
     if enemy_stats["Type"] == "Spirit":
-        print("1. Attack \n2. Flee \n3. Expel \n4. Guard")
+        print("1. Attack \n2. Flee \n3. Expel \n4. Guard \n")
     elif enemy_stats["Type"] == "Warden":
-        print("1. Attack \n2. Flee \n3. Charged Attack \n4. Guard")
+        print("1. Attack \n2. Flee \n3. Charged Attack \n4. Guard \n")
     time.sleep(1)
     while True:
         user_action = input("What would you like to do?(1/2/3/4): ")
@@ -144,6 +162,7 @@ def spirit_combat(enemy_stats):
         user_stats["Health"] = 0
     
     print(f"Spirit attacks you for {damage} damage. You now have {user_stats['Health']} health left.")
+    time.sleep(1)
     return user_stats, enemy_stats
 
 
@@ -176,7 +195,7 @@ def boss_combat(enemy_stats):
 def main_battle(enemy):
     enemy_spirit = spirit_stats
     enemy_boss = boss_stats
-    print(f"{enemy['Type']} appeared!")
+    print(f"{enemy['Type']} appeared!\n")
     going_first = random.randint(1, 2)
     if going_first == 1 and enemy["Type"] == "Spirit":
         print("You are going first.")
@@ -210,7 +229,7 @@ def main_battle(enemy):
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
+                if enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 turn = "enemy"
@@ -226,7 +245,7 @@ def main_battle(enemy):
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
+                if enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 turn = "player"
@@ -242,7 +261,7 @@ def main_battle(enemy):
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
+                if enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 turn = "enemy"
@@ -258,7 +277,7 @@ def main_battle(enemy):
                 if user_stats["Health"] == 0:
                     print("You lose.")
                     break
-                elif enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
+                if enemy_spirit["Health"] == 0 or enemy_boss["Health"] == 0:
                     print("You win!")
                     break
                 turn = "player"
@@ -267,24 +286,79 @@ def main_battle(enemy):
 
 
 def movement():
-    if user_location == 1:
-        print("You can go to rooms 4 or 2.")
-    elif user_location == 2:
-        print("You can go to rooms 4, 1, or 6.")
-    elif user_location == 3:
-        print("You can go to rooms 5, 7, or 8.")
-    elif user_location == 4:
-        print("You can go to rooms 1, 2, or 7.")
-    elif user_location == 5:
-        print("You can go to rooms 3, 7, 8, or 6.")
-    elif user_location == 6:
-        print("You can go to rooms 2, 5, or 8.")
-    elif user_location == 7:
-        print("You can go to rooms 4, 5, or 3.")
-    elif user_location == 8:
-        print("You can go to rooms 5, 3, 6, or 9.")
-    next_room = input("What location would you like to go to?(as a number): ")
-    print(f"You make you way over to room {next_room}.")
+    while True:
+        if user_location == 1:
+            print("You can go to rooms 4 or 2.")
+        elif user_location == 2:
+           print("You can go to rooms 4, 1, or 6.")
+        elif user_location == 3:
+            print("You can go to rooms 5, 7, or 8.")
+        elif user_location == 4:
+            print("You can go to rooms 1, 2, or 7.")
+        elif user_location == 5:
+            print("You can go to rooms 3, 7, 8, or 6.")
+        elif user_location == 6:
+            print("You can go to rooms 2, 5, or 8.")
+        elif user_location == 7:
+            print("You can go to rooms 4, 5, or 3.")
+        elif user_location == 8:
+            print("You can go to rooms 5, 3, 6, or 9.")
+
+        next_room = input("What location would you like to go to?(as a number): ")
+        if not next_room.isnumeric():
+            print("That isn't a number.")
+            continue
+        else:
+            next_room = int(next_room)
+            if user_location == 1:
+                print("You can go to rooms 4 or 2.")
+                if next_room not in game_map["Connected One"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 2:
+                print("You can go to rooms 4, 1, or 6.")
+                if next_room not in game_map["Connected Two"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 3:
+                print("You can go to rooms 5, 7, or 8.")
+                if next_room not in game_map["Connected Three"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 4:
+                print("You can go to rooms 1, 2, or 7.")
+                if next_room not in game_map["Connected Four"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 5:
+                print("You can go to rooms 3, 7, 8, or 6.")
+                if next_room not in game_map["Connected Five"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 6:
+                print("You can go to rooms 2, 5, or 8.")
+                if next_room not in game_map["Connected Six"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 7:
+                print("You can go to rooms 4, 5, or 3.")
+                if next_room not in game_map["Connected Seven"]:
+                    print("You can't go there...")
+                    continue
+                break
+            elif user_location == 8:
+                print("You can go to rooms 5, 3, 6, or 9.")
+                if next_room not in game_map["Connected Eight"]:
+                    print("You can't go there...")
+                    continue
+                break
+    print(f"You make you way over to room {next_room}.\n")
     return next_room
 
 
@@ -300,7 +374,7 @@ def inventory(existing_items):
     
     print("Here are the items in your inventory:")
     for item in is_inventory:
-        print(f"  - {item}")
+        print(f"\t-{item}")
     
     user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
     
@@ -344,21 +418,32 @@ def inventory(existing_items):
                     break
             break
     elif user_equip.lower() == "n":
-        print("You decide to not use anything.")
+        print("You decide to not use anything.\n")
     
     return existing_items
 
 
 def explore(existing_items):
+    item_in_room = False
     for exist_item in existing_items.keys():
-        if existing_items[exist_item]["Room"] == user_location:
+        if existing_items[exist_item]["Room"] == user_location and existing_items[exist_item]["Inventory"] == False:
             print(f"{exist_item} is in the room.")
+            item_in_room = True
             user_take = input("Do you want to take it?(y/n): ")
             if user_take == "y":
                 existing_items[exist_item]["Inventory"] = True
-                print(f"You took the {exist_item}")
+                print(f"You took the {exist_item}\n")
             elif user_take == "n":
-                print("You decide to leave it.")
+                print("You decide to leave it.\n")
+    for note in notes.keys():
+        if note == user_location:
+            item_in_room = True
+            print("There is a note here.")
+            if user_location == 1:
+                print("It looks very tattered and old...")
+            print(notes[note])
+    if not item_in_room:
+       print("There is nothing in this room.\n")
     return existing_items
 
 
@@ -397,6 +482,7 @@ while True:
     print("You need to fight your way out in order to escape. Let's start.")
     time.sleep(1)
     while True:
+        past_location = user_location
         if user_stats["Health"] == 0:
             print("You have lost.")
             another_game = restart()
@@ -414,9 +500,13 @@ while True:
                 print("Thank you for playing.")
                 break
         if user_location == boss_location:
-            fight = input("Do you want to face the master?(y/n): ")
-            user_stats, boss_stats = main_battle(boss_stats)
-            continue
+            fight_master = input("Do you want to face the warden?(y/n): ")
+            if fight_master == "y":
+                user_stats, boss_stats = main_battle(boss_stats)
+                continue
+            else:
+                print("You decide to turn back.")
+                user_location = past_location
         elif user_location in spirit_locations:
             user_stats, extra_entity = main_battle(spirit_stats)
             spirit_locations.remove(user_location)
@@ -425,4 +515,5 @@ while True:
         user_location, game_items = menu()
     if not another_game:
         break
+    break
 
