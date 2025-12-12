@@ -96,7 +96,7 @@ def user_combat(enemy_stats):
             enemy_stats["Health"] -= damage
             if enemy_stats["Health"] < 0:
                 enemy_stats["Health"] = 0
-            print(f"You attacked. {enemy_stats["Type"]} took {damage} damage. It now has {enemy_stats["Health"]} health left.")
+            print(f"You attacked.{enemy_stats["Type"]} took {damage} damage. It now has {enemy_stats["Health"]} health left.")
             break
         elif user_action == "2":
             flee_chance = random.randint(1, 10)
@@ -298,41 +298,41 @@ def inventory(existing_items):
             is_inventory.append(exist_item)
     if is_inventory:
         print("Here are the items in your inventory:")
-   """ #continue fixing indents        for item in is_inventory:
-                print(item)
-            user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
-            if user_equip.lower() == "e":
-                while True:
-                    item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
-                    if item_used not in is_inventory:
-                        print("That isn't in your inventory. Please try again.")
-                        continue
-                    elif item_used.lower() == "no":
-                        break
-                    for exist_item in existing_items.keys():
-                        if item_used == exist_item:
-                            for stat in user_stats.keys():
-                                if stat == existing_items[exist_item]["Property"]:
-                                    existing_items[exist_item]["Effect"] += user_stats[stat]
-                print(f"You used {item_used}. Your {stat} stat is now {user_stats[stat]}")
-            elif user_equip.lower() == "u":
-                while True:
-                    item_unequip = input("What item do you want to unequip?(dagger or shield, no to back out): ")
-                    if item_unequip.capitalize() not in is_inventory:
-                        print("It currently isn't in your inventory.")
-                    elif item_unequip == "no":
-                        break
-                    for exist_item in game_items.keys():
-                        if item_unequip == exist_item and exist_item["Use"] == "Equip":
-                            for stat in user_stats.keys():
-                                if stat == exist_item["Property"]:
-                                    exist_item["Effect"] -= user_stats[stat]
-                print(f"You unequipped {item_unequip}. Your {stat} stat is now {user_stats[stat]}")
-            elif user_equip.lower() == "n":
-                print("You decide to not use anything.")
+    for item in is_inventory:
+        print(item)
+        user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
+        if user_equip.lower() == "e":
+            while True:
+                item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
+                if item_used not in is_inventory:
+                    print("That isn't in your inventory. Please try again.")
+                    continue
+                elif item_used.lower() == "no":
+                    break
+                for exist_item in existing_items.keys():
+                    if item_used == exist_item:
+                        for stat in user_stats.keys():
+                            if stat == existing_items[exist_item]["Property"]:
+                                existing_items[exist_item]["Effect"] += user_stats[stat]
+            print(f"You used {item_used}. Your {stat} stat is now {user_stats[stat]}")
+        elif user_equip.lower() == "u":
+            while True:
+                item_unequip = input("What item do you want to unequip?(dagger or shield, no to back out): ")
+                if item_unequip.capitalize() not in is_inventory:
+                    print("It currently isn't in your inventory.")
+                elif item_unequip == "no":
+                    break
+                for exist_item in game_items.keys():
+                    if item_unequip == exist_item and exist_item["Use"] == "Equip":
+                        for stat in user_stats.keys():
+                            if stat == exist_item["Property"]:
+                                exist_item["Effect"] -= user_stats[stat]
+            print(f"You unequipped {item_unequip}. Your {stat} stat is now {user_stats[stat]}")
+        elif user_equip.lower() == "n":
+            print("You decide to not use anything.")
         elif not is_inventory:
-            print("There is nothing in your inventory.")"""
-    #return user_stats, game_items
+            print("There is nothing in your inventory.")
+    return user_stats, game_items
 
 
 def explore(existing_items):
