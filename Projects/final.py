@@ -334,57 +334,61 @@ def inventory(existing_items):
     for item in is_inventory:
         print(f"\t-{item}")
     
-    user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
-    
-    if user_equip.lower() == "e":
-        while True:
-            item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
-            if item_used.lower() == "no":
-                break
-            if item_used not in is_inventory:
-                print("That isn't in your inventory. Please try again.")
-                continue
-            for exist_item in existing_items.keys():
-                if item_used.lower() == exist_item.lower():
-                    prop = existing_items[exist_item]["Property"]
-                    effect = existing_items[exist_item]["Effect"]
-                    use_type = existing_items[exist_item]["Use"]
-                    if use_type == "Equip": #equippable
-                        if existing_items[exist_item].get("Equipped", False):
-                            print(f"{item_used} is already equipped.")
-                        else:
-                            user_stats[prop] += effect
-                            existing_items[exist_item]["Equipped"] = True
-                            print(f"You equipped {item_used}. Your {prop} stat is now {user_stats[prop]}")
-                    else: #one-time use
-                        user_stats[prop] += effect
-                        existing_items[exist_item]["Inventory"] = False
-                        print(f"You used {item_used}. Your {prop} stat is now {user_stats[prop]}")
+    while True:
+        user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
+        
+        if user_equip.lower() == "e":
+            while True:
+                item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
+                if item_used.lower() == "no":
                     break
-            break
-    elif user_equip.lower() == "u":
-        while True:
-            item_unequip = input("What item do you want to unequip?(to back out, type 'no'): ")
-            if item_unequip.lower() == "no":
-                break
-            if item_unequip not in is_inventory:
-                print("It currently isn't in your inventory.")
-                continue
-            # Find and unequip the item
-            for exist_item in existing_items.keys():
-                if item_unequip.lower() == exist_item.lower() and existing_items[exist_item]["Use"] == "Equip":
-                    if not existing_items[exist_item].get("Equipped", False):
-                        print(f"{item_unequip} is not currently equipped.")
-                    else:
+                if item_used not in is_inventory:
+                    print("That isn't in your inventory. Please try again.")
+                    continue
+                for exist_item in existing_items.keys():
+                    if item_used.lower() == exist_item.lower():
                         prop = existing_items[exist_item]["Property"]
                         effect = existing_items[exist_item]["Effect"]
-                        user_stats[prop] -= effect
-                        existing_items[exist_item]["Equipped"] = False
-                        print(f"You unequipped {item_unequip}. Your {prop} stat is now {user_stats[prop]}")
+                        use_type = existing_items[exist_item]["Use"]
+                        if use_type == "Equip": #equippable
+                            if existing_items[exist_item].get("Equipped", False):
+                                print(f"{item_used} is already equipped.")
+                            else:
+                                user_stats[prop] += effect
+                                existing_items[exist_item]["Equipped"] = True
+                                print(f"You equipped {item_used}. Your {prop} stat is now {user_stats[prop]}")
+                        else: #one-time use
+                            user_stats[prop] += effect
+                            existing_items[exist_item]["Inventory"] = False
+                            print(f"You used {item_used}. Your {prop} stat is now {user_stats[prop]}")
+                        break
+                break
+        elif user_equip.lower() == "u":
+            while True:
+                item_unequip = input("What item do you want to unequip?(to back out, type 'no'): ")
+                if item_unequip.lower() == "no":
                     break
+                if item_unequip not in is_inventory:
+                    print("It currently isn't in your inventory.")
+                    continue
+                # Find and unequip the item
+                for exist_item in existing_items.keys():
+                    if item_unequip.lower() == exist_item.lower() and existing_items[exist_item]["Use"] == "Equip":
+                        if not existing_items[exist_item].get("Equipped", False):
+                            print(f"{item_unequip} is not currently equipped.")
+                        else:
+                            prop = existing_items[exist_item]["Property"]
+                            effect = existing_items[exist_item]["Effect"]
+                            user_stats[prop] -= effect
+                            existing_items[exist_item]["Equipped"] = False
+                            print(f"You unequipped {item_unequip}. Your {prop} stat is now {user_stats[prop]}")
+                        break
+                break
+        elif user_equip.lower() == "n":
+            print("You decide to not use anything.\n")
             break
-    elif user_equip.lower() == "n":
-        print("You decide to not use anything.\n")
+        else:
+            print("I'm not sure what you meant by that...")
     
     return existing_items, user_stats
 
@@ -413,7 +417,7 @@ def explore(existing_items):
     return existing_items
 
 
-def menu(): #needs to be idiot-proofed
+def menu():
     new_location = user_location
     new_inventory = game_items
     new_stats = user_stats

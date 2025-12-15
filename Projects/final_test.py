@@ -1,5 +1,5 @@
 #VY 2nd Final Project
-import random
+import random #Warden fight and warden charged attacks are bugged.
 import time
 
 user_location = 1
@@ -25,7 +25,7 @@ boss_stats = {
     "Type": "Warden",
     "Health": 70,
     "Attack": 4,
-    "Defense": 4,
+    "Defense": 2,
     "Charge counter": 0
 }
 
@@ -88,7 +88,7 @@ game_map = {
 }
 
 notes = {
-    1: "\nI've been here for ages. I can't decide if I should leave or not. I'm scared of whatever is out there.\n",
+    1: "\nI've been here for ages. I can't decide if I should leave or not. I'm scared of the Warden out there. It's not letting me leave.\n",
     4: "\nI'm going in circles. Can't tell if anyone is reading this, but if so, best of luck to you.\n",
     6: "\nHow old is this place, like seriously? It's really worn-down. Why does the warden still stay in this place?\n",
     8: "\nMy pen is dying, so I guess I can't write anymore...that sucks.\n"
@@ -121,13 +121,17 @@ def user_combat(enemy_stats):
             print(f"You attacked. {enemy_stats['Type']} took {damage} damage. It now has {enemy_stats['Health']} health left.")
             break
         elif user_action == "2":
-            flee_chance = random.randint(1, 10)
-            if flee_chance <= 3:
-                enemy_stats["Health"] = 0
-                print("You successfully ran away.")
-            else:
-                print("You failed to run away.")
-            break
+            if enemy_stats["Type"] == "Spirit":
+                flee_chance = random.randint(1, 10)
+                if flee_chance <= 3:
+                    enemy_stats["Health"] = 0
+                    print("You successfully ran away.")
+                else:
+                    print("You failed to run away.")
+                break
+            elif enemy_stats["Type"] == "Warden":
+                print("Something is preventing you from trying to leave...")
+                continue
         elif user_action == "3":
             if enemy_stats["Type"] == "Spirit":
                 print("You try to erase the spirit from existence.")
@@ -268,7 +272,7 @@ def main_battle(enemy):
                     print("You win!")
                     break
                 turn = "enemy"
-
+                
             elif turn == "enemy":
                 print(f"{enemy['Type']}'s turn.")
                 time.sleep(1)
@@ -332,59 +336,70 @@ def inventory(existing_items):
     
     print("Here are the items in your inventory:")
     for item in is_inventory:
-        print(f"\t-{item}")
+        equipped = ""
+        for exist_item in existing_items.keys():
+            if exist_item["Equipped"]:
+                equipped = "Equipped"
+    print(f"\t-{item}{equipped}")
+                
     
-    user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
-    
-    if user_equip.lower() == "e":
-        while True:
-            item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
-            if item_used.lower() == "no":
-                break
-            if item_used not in is_inventory:
-                print("That isn't in your inventory. Please try again.")
-                continue
-            for exist_item in existing_items.keys():
-                if item_used.lower() == exist_item.lower():
-                    prop = existing_items[exist_item]["Property"]
-                    effect = existing_items[exist_item]["Effect"]
-                    use_type = existing_items[exist_item]["Use"]
-                    if use_type == "Equip": #equippable
-                        if existing_items[exist_item].get("Equipped", False):
-                            print(f"{item_used} is already equipped.")
-                        else:
-                            user_stats[prop] += effect
-                            existing_items[exist_item]["Equipped"] = True
-                            print(f"You equipped {item_used}. Your {prop} stat is now {user_stats[prop]}")
-                    else: #one-time use
-                        user_stats[prop] += effect
-                        existing_items[exist_item]["Inventory"] = False
-                        print(f"You used {item_used}. Your {prop} stat is now {user_stats[prop]}")
+    while True:
+        user_equip = input("Do you want to equip/use an item or unequip an item?(e/u, n if you want to back out): ")
+        
+        if user_equip.lower() == "e":
+            while True:
+                item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
+                if item_used.lower() == "no":
                     break
-            break
-    elif user_equip.lower() == "u":
-        while True:
-            item_unequip = input("What item do you want to unequip?(to back out, type 'no'): ")
-            if item_unequip.lower() == "no":
-                break
-            if item_unequip not in is_inventory:
-                print("It currently isn't in your inventory.")
-                continue
-            # Find and unequip the item
-            for exist_item in existing_items.keys():
-                if item_unequip.lower() == exist_item.lower() and existing_items[exist_item]["Use"] == "Equip":
-                    if not existing_items[exist_item].get("Equipped", False):
-                        print(f"{item_unequip} is not currently equipped.")
-                    else:
+                if item_used not in is_inventory:
+                    print("That isn't in your inventory. Please try again.")
+                    continue
+                for exist_item in existing_items.keys():
+                    if item_used.lower() == exist_item.lower():
                         prop = existing_items[exist_item]["Property"]
                         effect = existing_items[exist_item]["Effect"]
-                        user_stats[prop] -= effect
-                        existing_items[exist_item]["Equipped"] = False
-                        print(f"You unequipped {item_unequip}. Your {prop} stat is now {user_stats[prop]}")
+                        use_type = existing_items[exist_item]["Use"]
+                        if use_type == "Equip": #equippable
+                            if exist_item["Equipped"]:
+                                print(f"{item_used} is already equipped.")
+                            else:
+                                user_stats[prop] += effect
+                                existing_items[exist_item]["Equipped"] = True
+                                print(f"You equipped {item_used}. Your {prop} stat is now {user_stats[prop]}")
+                        else: #one-time use
+                            user_stats[prop] += effect
+                            existing_items[exist_item]["Inventory"] = False
+                            print(f"You used {item_used}. Your {prop} stat is now {user_stats[prop]}")
+                        break
+                break
+        elif user_equip.lower() == "u":
+            while True:
+                item_unequip = input("What item do you want to unequip?(to back out, type 'no'): ")
+                if item_unequip.lower() == "no":
                     break
+                if item_unequip not in is_inventory:
+                    print("It currently isn't in your inventory.")
+                    continue
+                # Find and unequip the item
+                for exist_item in existing_items.keys():
+                    if item_unequip.lower() == exist_item.lower() and existing_items[exist_item]["Use"] == "Equip":
+                        if not existing_items[exist_item].get("Equipped", False):
+                            print(f"{item_unequip} is not currently equipped.")
+                        else:
+                            prop = existing_items[exist_item]["Property"]
+                            effect = existing_items[exist_item]["Effect"]
+                            user_stats[prop] -= effect
+                            existing_items[exist_item]["Equipped"] = False
+                            print(f"You unequipped {item_unequip}. Your {prop} stat is now {user_stats[prop]}")
+                        break
+                    else:
+                        print("That isn't equippable. Please try again.")
+                break
+        elif user_equip.lower() == "n":
+            print("You decide to not use anything.\n")
             break
-    elif user_equip.lower() == "n":
-        print("You decide to not use anything.\n")
+        else:
+            print("I'm not sure what you meant by that...")
     
     return existing_items, user_stats
 
@@ -413,7 +428,7 @@ def explore(existing_items):
     return existing_items
 
 
-def menu(): #needs to be idiot-proofed
+def menu():
     new_location = user_location
     new_inventory = game_items
     new_stats = user_stats
@@ -469,7 +484,7 @@ while True:
                 print("Thank you for playing.")
                 break
         elif boss_stats["Health"] == 0:
-            print("You managed to beat the master and escape.")
+            print("You managed to beat the warden and escape.")
             another_game = restart()
             if another_game:
                 break
@@ -477,12 +492,14 @@ while True:
                 print("Thank you for playing.")
                 break
         if user_location == boss_location:
-            fight_master = input("Do you want to face the warden?(y/n): ")
+            fight_master = input("Do you want to face the warden? Once you go in, there's no turning back.(y/n): ")
             if fight_master == "y":
+                print("You enter the warden's chambers...")
+                print("It stands up, and stares at you, preparing for battle.")
                 user_stats, boss_stats = main_battle(boss_stats)
                 continue
             else:
-                print("You decide to turn back.")
+                print("You decide to turn back...for now.")
                 user_location = past_location
                 continue
         elif user_location in spirit_locations:
@@ -490,6 +507,7 @@ while True:
             spirit_locations.remove(user_location)
             continue
         extra_entity = {}
+        print(f"You are in room {user_location}.")
         user_location, game_items, user_stats = menu()
     if not another_game:
         break
