@@ -337,10 +337,10 @@ def inventory(existing_items):
     print("Here are the items in your inventory:")
     for item in is_inventory:
         equipped = ""
-        for exist_item in existing_items.keys():
-            if exist_item["Equipped"]:
-                equipped = "Equipped"
-    print(f"\t-{item}{equipped}")
+        if "Equipped" in existing_items[item]:
+            if existing_items[item]["Equipped"]:
+                equipped = " (equipped)"
+        print(f"\t-{item}{equipped}")
                 
     
     while True:
@@ -351,16 +351,13 @@ def inventory(existing_items):
                 item_used = input('What item do you want to use/equip?(to back out, type "no"): ')
                 if item_used.lower() == "no":
                     break
-                if item_used not in is_inventory:
-                    print("That isn't in your inventory. Please try again.")
-                    continue
                 for exist_item in existing_items.keys():
                     if item_used.lower() == exist_item.lower():
                         prop = existing_items[exist_item]["Property"]
                         effect = existing_items[exist_item]["Effect"]
                         use_type = existing_items[exist_item]["Use"]
                         if use_type == "Equip": #equippable
-                            if exist_item["Equipped"]:
+                            if existing_items[exist_item]["Equipped"]:
                                 print(f"{item_used} is already equipped.")
                             else:
                                 user_stats[prop] += effect
@@ -371,6 +368,9 @@ def inventory(existing_items):
                             existing_items[exist_item]["Inventory"] = False
                             print(f"You used {item_used}. Your {prop} stat is now {user_stats[prop]}")
                         break
+                if item_used not in is_inventory:
+                    print("That isn't in your inventory. Please try again.")
+                    continue
                 break
         elif user_equip.lower() == "u":
             while True:
